@@ -1,0 +1,316 @@
+/*  _________________ Bloc insta _________________ */
+
+.insta {
+    margin: auto;
+    margin-top: 10px;
+    margin-bottom: 50px;
+  }
+  
+  .insta-container {
+    max-width: 1400px;
+    margin: auto;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: flex-start;
+  }
+  
+  .insta-container article {
+    background-color: #fff;
+    width: 400px;
+    /* height: 700px; */
+    margin: 20px;
+    box-shadow: 0px 0px 3px 0px rgba(90, 90, 90, 0.5);
+    border-radius: 5px;
+  }
+  
+  /*  _________________ Bloc Header _________________ */
+  
+  .insta-container-header {
+    padding: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .insta-container-header-titre {
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .insta-container-header-titre h2 {
+    font-size: 20px;
+    font-weight: 500;
+  }
+  
+  .insta-container-header-titre h3 {
+    font-size: 15px;
+    font-weight: 500;
+    color: var(--couleur-principale);
+  }
+  
+  .insta-container-header-titre {
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .insta-container-header-img {
+    width: 50px;
+    height: 50px;
+    border: medium solid var(--couleur-principale);
+    border-radius: 50%;
+    background-image: url(../img/autres/tata-fatia-tan.png);
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-size: cover;
+  }
+  
+  /*  _________________ Bloc Contenu _________________ */
+  
+  .insta-container-image img {
+    width: 100%;
+  }
+  
+  .insta-container-texte {
+    font-size: 1rem;
+    padding: 10px;
+    font-family: var(--police-description);
+    text-align: justify;
+    line-height: 1.5;
+  }
+  
+  .insta-container-texte p:first-child {
+    margin-bottom: 2rem;
+  }
+  
+  .insta-container-texte .telephone {
+    font-size: 1rem;
+    color: var(--couleur-principale);
+    font-weight: 700;
+    margin-top: 20px;
+    display: flex;
+    justify-content: flex-end;
+  }
+  
+  .insta-container-texte .telephone i {
+    margin-right: 10px;
+    font-size: 1.2rem;
+  }
+  
+  .insta-container-texte .marque {
+    font-weight: 600;
+    color: var(--couleur-principale);
+  }
+  
+  .insta-container-texte .marque::after {
+    font-weight: 700;
+    content: " \AE";
+  }
+  
+  .separateur {
+    background-color: var(--couleur-principale);
+    width: 200px;
+    height: 2px;
+    margin: auto;
+    margin-bottom: 2rem;
+  }
+  
+  /*  _________________ Bloc Covid _________________ */
+  
+  .liste-covid-element {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin: 1rem;
+  }
+  .liste-covid-element i {
+    width: 50px;
+    font-size: 2rem;
+    margin-bottom: 1rem;
+    color: var(--couleur-principale);
+  }
+  .liste-covid-element p {
+    text-align: center;
+  }
+  
+  /*  _________________ Bloc Tarifs _________________ */
+  
+  .tarifs {
+    list-style: none;
+  }
+  
+  .tarifs li {
+    margin-bottom: 1rem;
+  }
+  
+  .tarifs .libelle {
+    /* font-size: 1.3rem; */
+  }
+  
+  .tarifs .libelle::before {
+    /* content: "- "; */
+  }
+  
+  .detail {
+    display: flex;
+    justify-content: space-between;
+  }
+  
+  .detail .duree {
+  }
+  
+  .detail .tarif {
+    color: var(--couleur-principale);
+  }
+  
+  .info-supplementaire {
+    text-align: center;
+  }
+  
+  .info-supplementaire::before {
+    content: "* ";
+    font-size: 1.4rem;
+    color: var(--couleur-principale);
+  }
+  
+  /*  _________________ Bloc Adresse _________________ */
+  
+  .stations-metro {
+    text-align: center;
+  }
+  
+  .stations-metro li {
+    padding: 10px;
+  }
+  
+  .chip {
+    display: inline-block;
+    width: 30px;
+    height: 30px;
+    padding: 4px;
+    border-radius: 50%;
+    background-color: #333;
+    color: white;
+    text-align: center;
+    margin-top: 10px;
+    margin-bottom: 10px;
+  }
+  
+  .ligne-neuf {
+    background-color: #d5c900;
+  }
+  
+  .ligne-une {
+    background-color: #fece00;
+  }
+  
+  .ligne-deux {
+    background-color: #0065ae;
+  }
+  
+  .ligne-six {
+    background-color: #84c28e;
+  }
+  
+  .ligne-sept {
+    background-color: #ff82b4;
+  }
+  
+  .ligne-huit {
+    background-color: #d282be;
+  }
+  
+  .ligne-a {
+    background-color: #ec222c;
+  }
+  
+  /*  _________________ Ordres post _________________ */
+  /*
+  #coronavirus {
+    order: 0;
+  }
+  */
+  #adresse {
+    order: 0;
+  }
+  #botanExplication {
+    order: 1;
+  }
+  #tarifsSprayBotan {
+    order: 1;
+  }
+  #botan {
+    order: 1;
+  }
+  #botan {
+    order: 1;
+  }
+  #sprayBotanVisage {
+    order: 2;
+  }
+  #sprayBotanAvantApres {
+    order: 2;
+  }
+  #treatwell {
+    order: 1;
+  }
+  #spraybotan {
+    order: 3;
+  }
+  #sprayBotanCorps {
+    order: 6;
+  }
+  #sprayBotanJambes {
+    order: 7;
+  }
+  /*
+  #lpg {
+    order: 4;
+  }
+  #bloomea {
+    order: 5;
+  }
+  */
+  /*
+  #massage-dos {
+    order: 8;
+  }
+  #epilations {
+    order: 9;
+  }
+  #epilations-classiques {
+    order: 10;
+  }
+  #beaute-regard {
+    order: 11;
+  }
+  #soins-visage {
+    order: 12;
+  }
+  #soins-minceur {
+    order: 13;
+  }
+  #pass {
+    order: 14;
+  }
+  */
+  /*
+  #endosphere {
+    order: 1;
+  }
+  */
+  /*
+  #luxom {
+    order: 2;
+  }
+  */
+  /*
+  #microneedling {
+    order: 4;
+  }
+  */
+  

@@ -1,0 +1,72 @@
+/* _________________ Communs _________________ */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  
+    /* Variables : */
+    --couleur-principale: #955635/*#23a6d5*/;
+    --police-description:  "inherit", sans-serif;
+    /*--police-principal:  "Pacifico", cursive;*/
+    --police-principal:  "Dancing Script", cursive;
+    --police-secondaire:  'Roboto', sans-serif;
+  }
+  
+  a {
+    text-decoration: none;
+    color: var(--couleur-principale);
+  }
+  
+  .font-principal {
+    font-family: var(--police-principal);
+  }
+  
+  .font-secondaire {
+    font-family: var(--police-secondaire);
+  }
+  
+  .couleur-principale {
+    color: var(--couleur-principale);
+  }
+  
+  /*  _________________ Animations _________________ */
+  
+  .top-slide {
+    opacity: 0;
+    transform: translateY(-1000px);
+    animation: animation-titre 1s 1s forwards;
+  }
+  
+  .left-slide {
+    opacity: 0;
+    transform: translateX(-1000px);
+    animation: animation-titre 3s 1s ease-in-out forwards;
+  }
+  
+  .right-slide {
+    opacity: 0;
+    transform: translateX(1000px);
+    animation: animation-titre 3s 1s ease-out forwards;
+  }
+  
+  .bottom-slide {
+    opacity: 0;
+    transform: translateY(1000px);
+    animation: animation-titre 5s 1s forwards;
+  }
+  
+  @keyframes animation-titre {
+    100% {
+      transform: translateX(0px);
+      opacity: 1;
+    }
+  }
+  
+  
+  
+  
+  
+  
+  
+  
+  
