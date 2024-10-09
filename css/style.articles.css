@@ -231,15 +231,20 @@
   }
   
   /*  _________________ Ordres post _________________ */
-  /*
-  #coronavirus {
-    order: 0;
-  }
-  */
+  
   #adresse {
     order: 0;
   }
+  #spraybotan {
+    order: 0;
+  }
+  #botan {
+    order: 0;
+  }
   #botanExplication {
+    order: 1;
+  }
+  #botan {
     order: 1;
   }
   #tarifsSprayBotan {
@@ -248,36 +253,23 @@
   #botan {
     order: 1;
   }
-  #botan {
-    order: 1;
-  }
-  #sprayBotanVisage {
-    order: 2;
-  }
   #sprayBotanAvantApres {
     order: 2;
+  }
+
+  /*
+  #coronavirus {
+    order: 0;
   }
   #treatwell {
     order: 1;
   }
-  #spraybotan {
-    order: 3;
-  }
-  #sprayBotanCorps {
-    order: 6;
-  }
-  #sprayBotanJambes {
-    order: 7;
-  }
-  /*
   #lpg {
     order: 4;
   }
   #bloomea {
     order: 5;
   }
-  */
-  /*
   #massage-dos {
     order: 8;
   }
@@ -299,18 +291,12 @@
   #pass {
     order: 14;
   }
-  */
-  /*
   #endosphere {
     order: 1;
   }
-  */
-  /*
   #luxom {
     order: 2;
   }
-  */
-  /*
   #microneedling {
     order: 4;
   }
