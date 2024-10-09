@@ -232,29 +232,29 @@
   
   /*  _________________ Ordres post _________________ */
   
-  #adresse {
+  #botanExplication {
     order: 0;
+  }
+  #adresse {
+    order: 1;
   }
   #spraybotan {
-    order: 0;
-  }
-  #botan {
-    order: 0;
-  }
-  #botanExplication {
     order: 1;
   }
   #botan {
     order: 1;
+  }
+  #botan {
+    order: 2;
   }
   #tarifsSprayBotan {
-    order: 1;
+    order: 2;
   }
   #botan {
-    order: 1;
+    order: 2;
   }
   #sprayBotanAvantApres {
-    order: 2;
+    order: 3;
   }
 
   /*
