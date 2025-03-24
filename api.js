@@ -6,7 +6,7 @@ const bodyParser = require('body-parser');
 const bcrypt = require('bcrypt');
 
 const app = express();
-const PORT = 3000;
+const PORT = process.env.PORT || 3000; // Utilisez le port défini par l'hébergeur ou 3000 par défaut
 
 // Chemin vers la base de données SQLite
 const dbPath = path.resolve(__dirname, './bdd/database.sqlite');
@@ -27,7 +27,7 @@ app.use((req, res, next) => {
 });
 
 // Middleware pour servir les fichiers statiques (HTML, CSS, JS, etc.)
-app.use(express.static(path.resolve(__dirname)));
+app.use(express.static(path.resolve(__dirname, '../'))); // Sert les fichiers statiques depuis la racine du projet
 app.use(bodyParser.json());
 
 // Configuration de multer pour stocker les images dans le dossier /img
@@ -235,6 +235,15 @@ app.get('/api/admins', (req, res) => {
       res.json(rows);
     }
   });
+});
+
+// Gestion des routes non trouvées
+app.use((req, res, next) => {
+  if (req.path.startsWith('/api')) {
+    res.status(404).json({ error: 'Route API non trouvée.' });
+  } else {
+    next();
+  }
 });
 
 // Démarrage du serveur
