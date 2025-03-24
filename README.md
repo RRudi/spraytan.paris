@@ -8,3 +8,10 @@ Modifier le code :
 
 Nommage Commit : 
 v2.1 : Description modification
+
+Pour lancer l'api : 
+node /workspaces/spraytan.paris/api.js
+
+Pour mettre à jour la base de données : 
+Il faut modifier le fichier schema.sql et lancver la commande suivante : 
+sqlite3 /workspaces/spraytan.paris/bdd/database.sqlite < /workspaces/spraytan.paris/bdd/schema.sql

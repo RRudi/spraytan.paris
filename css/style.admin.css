@@ -1,0 +1,256 @@
+/* Style général */
+body {
+  font-family: 'Roboto', sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #f8f9fa;
+  color: #333;
+}
+
+h1, h2 {
+  text-align: center;
+  color: var(--couleur-principale, #000);
+}
+
+h1 {
+  margin-top: 20px;
+  font-size: 2.5rem;
+}
+
+h2 {
+  margin-top: 30px;
+  font-size: 1.8rem;
+}
+
+/* Section des articles */
+#articles-list {
+  margin: 20px auto;
+  max-width: 800px;
+  padding: 20px;
+  background-color: #fff;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+}
+
+#articles-container {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.article-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 15px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  background-color: #f9f9f9;
+}
+
+.article-item h3 {
+  margin: 0;
+  font-size: 1.2rem;
+}
+
+.article-item p {
+  margin: 0;
+  font-size: 0.9rem;
+  color: #666;
+}
+
+.article-item button {
+  padding: 5px 10px;
+  font-size: 0.9rem;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.article-item button:hover {
+  background-color: #ddd;
+}
+
+/* Lien vers le site principal */
+.site-link {
+  display: inline-block;
+  margin: 20px auto;
+  padding: 10px 20px;
+  font-size: 1rem;
+  color: #fff;
+  background-color: var(--couleur-principale, #000);
+  text-decoration: none;
+  border-radius: 5px;
+  text-align: center;
+  transition: background-color 0.3s ease;
+}
+
+.site-link:hover {
+  background-color: #333;
+}
+
+/* Actions des articles */
+.article-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.article-actions button {
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  font-size: 1.2rem;
+  color: #333;
+  transition: color 0.3s ease;
+}
+
+.article-actions button:hover {
+  color: var(--couleur-principale, #000);
+}
+
+/* Formulaire */
+#article-form {
+  margin: 20px auto;
+  max-width: 800px;
+  padding: 20px;
+  background-color: #fff;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+}
+
+#article-form form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+#article-form label {
+  font-weight: bold;
+}
+
+#article-form input,
+#article-form textarea,
+#article-form button {
+  padding: 10px;
+  font-size: 1rem;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+}
+
+#article-form textarea {
+  resize: vertical;
+}
+
+#article-form button {
+  background-color: var(--couleur-principale, #000);
+  color: #fff;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+#article-form button:hover {
+  background-color: #333;
+}
+
+/* Formulaire de connexion */
+#login-container {
+  max-width: 400px;
+  margin: 50px auto;
+  padding: 20px;
+  background-color: #fff;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  text-align: center;
+}
+
+#login-container h1 {
+  margin-bottom: 20px;
+}
+
+#login-container form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+#login-container input {
+  padding: 10px;
+  font-size: 1rem;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+}
+
+#login-container button {
+  background-color: var(--couleur-principale, #000);
+  color: #fff;
+  padding: 10px;
+  font-size: 1rem;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+#login-container button:hover {
+  background-color: #333;
+}
+
+/* Style pour la barre d'outils de Quill */
+.ql-toolbar {
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+}
+
+.ql-toolbar button {
+  background-color: transparent;
+  border: none;
+  color: #333;
+  cursor: pointer;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.ql-toolbar button:hover {
+  background-color: #f0f0f0;
+  color: #000;
+}
+
+.ql-toolbar .ql-active {
+  background-color: #ddd;
+  color: #000;
+}
+
+.ql-toolbar .ql-picker {
+  color: #333;
+}
+
+.ql-toolbar .ql-picker-options {
+  background-color: #fff;
+  border: 1px solid #ddd;
+}
+
+.ql-toolbar .ql-picker-item:hover {
+  background-color: #f0f0f0;
+}
+
+#content {
+  width: 100%;
+  height: auto;
+  padding: 10px;
+  font-size: 1rem;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  resize: vertical;
+}
+
+
+.a {
+  position: absolute;
+  top: 10px;
+  right: 20px;
+  font-size: 14px;
+  color: #333;
+  text-decoration: none;
+}
