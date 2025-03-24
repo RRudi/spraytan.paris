@@ -6,7 +6,7 @@ const bodyParser = require('body-parser');
 const bcrypt = require('bcrypt');
 
 const app = express();
-const PORT = process.env.PORT || 3000; // Utilisez le port défini par l'hébergeur ou 3000 par défaut
+const PORT = process.env.PORT || 3000; // Utilise le port défini par l'hébergeur ou 3000 par défaut
 
 // Chemin vers la base de données SQLite
 const dbPath = path.resolve(__dirname, './bdd/database.sqlite');
