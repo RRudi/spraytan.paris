@@ -111,7 +111,7 @@ h2 {
 }
 
 /* Formulaire */
-#article-form {
+.article-form {
   margin: 20px auto;
   max-width: 800px;
   padding: 20px;
@@ -120,37 +120,37 @@ h2 {
   border-radius: 8px;
 }
 
-#article-form form {
+.article-form form {
   display: flex;
   flex-direction: column;
   gap: 15px;
 }
 
-#article-form label {
+.article-form label {
   font-weight: bold;
 }
 
-#article-form input,
-#article-form textarea,
-#article-form button {
+.article-form input,
+.article-form textarea,
+.article-form button {
   padding: 10px;
   font-size: 1rem;
   border: 1px solid #ddd;
   border-radius: 5px;
 }
 
-#article-form textarea {
+.article-form textarea {
   resize: vertical;
 }
 
-#article-form button {
+.article-form button {
   background-color: var(--couleur-principale, #000);
   color: #fff;
   cursor: pointer;
   transition: background-color 0.3s ease;
 }
 
-#article-form button:hover {
+.article-form button:hover {
   background-color: #333;
 }
 
