@@ -46,44 +46,10 @@
       <p class="left-slide logo">By Tata Fatia</p>
     </header>
 
-    <!--------------------------- Bloc principal --------------------->
-    <!--
-
-    <section class="bloc-principal" id="haut">
-      <div class="bloc-principal-conteneur font-secondaire">
-        <p class="left-slide message-glissant">
-          Spray Tan Paris avec BOTAN (Marque française bio et naturel)
-        </p>
-        <h1 class="right-slide message-glissant">
-          By Tata Fatia chez Paradis du Tan Paris !
-        </h1>
-
-        <p class="bottom-slide presentation">
-          Mon expertise en tant qu'esthéticienne pendant 40 ans, avec 20 ans d'expérience dans le spray tan, incluant des collaborations avec des Fashion Weeks,
-          Les MISS et des palaces parisiens, témoigne d'une maîtrise exceptionnelle dans le domaine de la beauté et du bronzage. 
-          Mon parcours impressionnant garantit des services de haute qualité et des résultats exceptionnels.
-        </p>
-
-        <nav class="bottom-slide">
-          <a href="#testimonials" class="bouton-menu-principal" >Lire les avis</a>
-          <a href="#adresse" class="bouton-menu-principal" >Nouvelle adresse</a>
-          <a href="https://www.instagram.com/paradisdutan_tatafatia/?hl=fr" target="_blank" class="bouton-menu-principal">Instagram</a>
-        </nav>
-      </div>
-
-      <div id="mouse" class="bottom-slide">
-        <div id="wheel"></div>
-        <div class="scroll"></div>
-        <div class="scroll2"></div>
-        <div class="scroll3"></div>
-      </div>
-    </section>
--->
     <!--------------------------- Acticle --------------------->
 
     <section class="insta">
-      <div class="insta-container">
-      </div>
+      <div class="insta-container"></div>
     </section>
 
     <!--------------------------- Avis --------------------->
@@ -99,38 +65,16 @@
             src="./img/avis/google-avis.png"
             alt="Logo Google avis clientes"
           />
-          <p class="google-note">4,8</p>
+          <p class="google-note">4,9</p>
           <img
             class="google-star"
             src="./img/avis/4.5-stars.png"
             alt="Etoiles Avis clientes"
           />
-          <p class="google-compte">253 avis</p>
+          <p class="google-compte">393 avis</p>
           <p class="google-lien">
             <a
               href="https://www.google.com/search?q=paradis+dune+femme&rlz=1C1GCEB_enFR888FR888&oq=paradis+dune+femme&aqs=chrome..69i57j0i10l4j69i60l3.2470j0j1&sourceid=chrome&ie=UTF-8#lrd=0x47e6720ad8c5b22d:0x2809a27dd8e1b38f,1,,,"
-              target="_blank"
-            >
-              <i class="fas fa-info-circle"></i>
-            </a>
-          </p>
-        </div>
-        <div class="google">
-          <img
-            class="google-logo"
-            src="./img/avis/Treatwell-logo.jpg"
-            alt="Logo TreatWell avis clientes"
-          />
-          <p class="google-note">4,8</p>
-          <img
-            class="google-star"
-            src="./img/avis/5-stars.png"
-            alt="Etoiles avis clientes"
-          />
-          <p class="google-compte">306 avis</p>
-          <p class="google-lien">
-            <a
-              href="https://www.treatwell.fr/salon/paradis-d-une-femme/"
               target="_blank"
             >
               <i class="fas fa-info-circle"></i>
@@ -222,23 +166,12 @@
             >
               <img src="./img/avis/google-avis.png" alt="Logo Google" />
             </a>
-            <a
-              href="https://www.treatwell.fr/salon/paradis-d-une-femme/"
-              target="_blank"
-            >
-              <img src="./img/avis/Treatwell-logo.jpg" alt="Logo Treatwell" />
-            </a>
           </div>
         </div>
       </div>
     </section>
 
     <!--------------------------- Footer --------------------->
-
-    <section class="copyright">
-      <p>&#169; 2025 SprayTan Paris - v4 <a href="./html/admin.html">⚙️</a></p>
-      <p id="last-updated">Dernière mise à jour : </p>
-    </section>
 
     <footer>
       <nav class="footer-navigation">
@@ -275,28 +208,18 @@
               ><i class="fas fa-arrow-up"></i
             ></a>
           </li>
-          <li>
-            <a title="Revenir tout en haut de la page"
-              ><i class="fas fa-arrow-up"></i
-            ></a>
-          </li>
         </ul>
       </nav>
     </footer>
 
-    <script src="./js/script.js"></script>
-    <script>
-      // Ajout automatique de la date et de l'heure de la dernière mise à jour
-      const lastUpdatedElement = document.getElementById('last-updated');
-      const now = new Date();
-      const formattedDate = now.toLocaleDateString('fr-FR', {
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric',
-        hour: '2-digit',
-        minute: '2-digit',
-      });
-      lastUpdatedElement.textContent += formattedDate;
-    </script>
+    <!--------------------------- Footer --------------------->
+
+    <section class="copyright">
+      <p>&#169; 2025 SprayTan Paris - v4 <a href="./admin.html">⚙️</a></p>
+      <p id="last-updated"></p>
+    </section>
+
+    <!--------------------------- Scripts --------------------->
+    <script src="./scripts/index.js" type="module"></script>
   </body>
 </html>
