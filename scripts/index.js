@@ -56,7 +56,7 @@ async function getListeArticle() {
           </div>
           <div class="telephone">
             <a
-              href="https://wa.me/${phoneNumber}"
+              href="https://wa.me/${phoneNumber}?text=Bonjour,%20j'ai%20vu%20un%20article%20sur%20votre%20site%20et%20je%20souhaite%20en%20savoir%20plus."
               target="_blank"
               title="Discuter sur WhatsApp"
               ><i class="fab fa-whatsapp"></i
