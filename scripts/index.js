@@ -1,7 +1,7 @@
 import { db } from './firebaseConfig.js';
 import { collection, getDocs } from 'https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js';
 
-const phoneNumber = "06 11 14 23 09";
+const phoneNumber = "33611142309";
 
 async function getListeArticle() {
   console.log("index.js -> getArticles");
@@ -55,8 +55,13 @@ async function getListeArticle() {
             ${article.contenu}
           </div>
           <div class="telephone">
-            <i class="material-icons">phone</i>
-            <p>${phoneNumber}</p>
+            <a
+              href="https://wa.me/${phoneNumber}"
+              target="_blank"
+              title="Discuter sur WhatsApp"
+              ><i class="fab fa-whatsapp"></i
+            >Commencer une discussion WhatsApp
+            </a>
           </div>
         </div>
       </article>
