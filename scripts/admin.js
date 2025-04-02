@@ -39,7 +39,7 @@ async function getListeArticle() {
           <button title="Afficher" onclick="updateStatus('${article.id}', ${article.est_actif})">
             ${article.est_actif ? '🐵' : '🙈'}
           </button>
-          <button title="Dupliquer" onclick="duplicateArticle('${article.id}')">📄📄</button>
+          <button title="Dupliquer" onclick="duplicateArticle('${article.id}')">✌️</button>
           <button title="Supprimer" onclick="deleteArticle('${article.id}')">🗑️</button>
         </div>
       </div>
@@ -80,13 +80,10 @@ async function addArticle(event) {
     console.log('Article créé avec succès:', newArticle);
 
     // Masquer le formulaire après la création de l'article
-    const articleForm = document.getElementById('article-form');
+    const articleForm = document.getElementById('add-article-form');
     if (articleForm) {
       articleForm.style.display = 'none';
     }
-
-    // Réinitialiser le formulaire
-    document.getElementById('form-article').reset();
 
     // Recharger la liste des articles
     getListeArticle();
@@ -134,11 +131,15 @@ async function editArticle(articleId) {
 
     if (articleDoc) {
       const articleData = articleDoc.data();
+      console.log('articleData : ', articleData);
       document.getElementById('edit-article-id').value = articleId;
       document.getElementById('edit-title').value = articleData.titre;
-      document.getElementById('edit-subtitle').value = articleData.sous_titre || '';
-      document.getElementById('edit-image').value = articleData.image || '';
-      document.getElementById('edit-content').value = articleData.contenu;
+      document.getElementById('edit-order').value = articleData.ordre_affichage;
+      document.getElementById('edit-subtitle').value = articleData.sous_titre;
+      document.getElementById('edit-image').value = articleData.image;
+      document.getElementById('edit-image-preview').src = articleData.image; // Ajouter la source de l'image
+      document.getElementById('edit-image-preview').style.display = articleData.image ? 'inline' : 'none'; // Afficher ou masquer l'aperçu
+      tinymce.get("edit-content").setContent(articleData.contenu);
 
       // Afficher le formulaire de modification
       document.getElementById('edit-article-form').style.display = 'block';
@@ -154,6 +155,7 @@ async function updateArticle(event) {
   event.preventDefault(); // Empêche le rechargement de la page lors de la soumission du formulaire
 
   const articleId = document.getElementById('edit-article-id').value;
+  const order = document.getElementById('edit-order').value;
   const titre = document.getElementById('edit-title').value.trim();
   const sousTitre = document.getElementById('edit-subtitle').value.trim();
   const image = document.getElementById('edit-image').value.trim();
@@ -167,6 +169,7 @@ async function updateArticle(event) {
   try {
     const articleRef = doc(db, 'articles', articleId);
     await updateDoc(articleRef, {
+      ordre_affichage: order,
       titre,
       sous_titre: sousTitre,
       image,
@@ -254,25 +257,66 @@ document.addEventListener('DOMContentLoaded', () => {
   // Récupérer la liste des articles
   getListeArticle();
 
-  // Afficher le formulaire de création d'article
-  document.getElementById('add-article-button').addEventListener('click', () => {
-    document.getElementById('article-form').style.display = 'block';
-  });
-
-  // Masquer le formulaire de création d'article
-  document.getElementById('cancel-button').addEventListener('click', () => {
-    document.getElementById('article-form').style.display = 'none';
-  });
-
-  // Ajout de l'écoute des boutons Submit des formulaires
-  document.getElementById('form-article').addEventListener('submit', addArticle);
+  // Ajout de l'écoute des boutons Submit des formulaires (Identification, Creation et modification d'articles)
   document.getElementById('login-form').addEventListener('submit', checkAdmin);
-
-  // Ajout de l'écoute du formulaire de modification
+  document.getElementById('add-article-form').addEventListener('submit', addArticle);
   document.getElementById('edit-article-form').addEventListener('submit', updateArticle);
 
-  // Ajout d'un bouton pour annuler la modification
+  // Afficher le formulaire de création d'article lorsque le bouton est cliqué
+  document.getElementById('add-article-button').addEventListener('click', () => {
+    document.getElementById('add-article-form').style.display = 'block';
+  });
+
+  // Masquer le formulaire de création d'article lorsque le bouton Annulé est cliqué
+  document.getElementById('cancel-button').addEventListener('click', () => {
+    document.getElementById('add-article-form').style.display = 'none';
+  });
+
+  // Masquer le formulaire de modification d'article lorsque le bouton Annulé est cliqué
   document.getElementById('edit-cancel-button').addEventListener('click', () => {
     document.getElementById('edit-article-form').style.display = 'none';
+  });
+
+  tinymce.init({
+    selector: "#content",
+    plugins: "lists link image code", // Ajout du plugin textcolor
+    toolbar:
+      "undo redo | styleselect | bold italic underline forecolor | alignleft aligncenter | bullist numlist outdent indent | link",
+    menubar: false,
+    height: 300,
+    hidden_input: false, // Désactive la création d'un champ masqué
+    setup: (editor) => {
+      editor.on("change", () => {
+        document.getElementById("content").value = editor.getContent();
+      });
+    },
+  });
+
+  tinymce.init({
+    selector: "#edit-content",
+    plugins: "lists link image code", // Ajout du plugin textcolor
+    toolbar:
+      "undo redo | styleselect | bold italic underline forecolor | alignleft aligncenter | bullist numlist outdent indent | link",
+    menubar: false,
+    height: 300,
+    hidden_input: false, // Désactive la création d'un champ masqué
+    setup: (editor) => {
+      editor.on("change", () => {
+        document.getElementById("edit-content").value = editor.getContent();
+      });
+    },
+  });
+
+  const editImageInput = document.getElementById("edit-image");
+  const editImagePreview = document.getElementById("edit-image-preview");
+
+  editImageInput.addEventListener("input", () => {
+    const imageUrl = editImageInput.value;
+    if (imageUrl) {
+      editImagePreview.src = imageUrl;
+      editImagePreview.style.display = "inline";
+    } else {
+      editImagePreview.style.display = "none";
+    }
   });
 });

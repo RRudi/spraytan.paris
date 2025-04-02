@@ -5,11 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>⚙️ Administration</title>
     <link rel="stylesheet" href="../css/style.admin.css" />
+    <script src="scripts/tinymce/js/tinymce/tinymce.min.js"></script>
+    <script>
+    </script>
   </head>
   <body>
-
-
-
+    
+    <!-- Formulaire de connexion -->
     <div id="login-container">
       <h1>Connexion Admin</h1>
       <form id="login-form">
@@ -21,34 +23,26 @@
       </form>
       <p id="login-error" style="color: red; display: none;">Identifiants incorrects.</p>
     </div>
-
-
-
-
-
+    
     <div id="admin-container" style="display: none;">
       <h1>⚙️ Administration</h1>
       
+      <!-- Liste des articles -->
       <section id="articles-list">
         <button id="add-article-button">➕ Ajouter un article</button>
-        <h2>📃 Il y a <span id="articles-number"></span> existants</h2>
-        <div id="articles-container">
-          <!-- Les articles seront chargés ici -->
-        </div>
+        <h2>📃 Il y a <span id="articles-number"></span> articles</h2>
+        <div id="articles-container"></div>
       </section>
 
-      <section id="article-form" class="article-form" style="display: none;">
+      <!-- Formulaire de création d'article -->
+      <section id="add-article-form" class="article-form" style="display: none;">
         <h2>Ajouter un nouvel article</h2>
-        <form id="form-article" enctype="multipart/form-data">
+        <form id="add-form-article" enctype="multipart/form-data">
           <input type="hidden" id="article-id" />
-          <label for="title">Titre :</label>
-          <input type="text" id="title" required />
-          <label for="subtitle">Sous-titre :</label>
-          <input type="text" id="subtitle" />
-          <label for="image">Image :</label>
+          <input type="text" id="title" placeholder="Titre de l'article" required />
+          <input type="text" id="subtitle" placeholder="Sous-Titre de l'article" required />
           <input type="text" id="image" placeholder="URL de l'image" />
-          <label for="content">Contenu :</label>
-          <textarea id="content" rows="10" placeholder="Écrivez le contenu ici..." required></textarea>
+          <textarea id="content" placeholder="Écrivez le contenu de l'article ici..." required></textarea>
           <button type="submit">Enregistrer</button>
           <button type="button" id="cancel-button">Annuler</button>
         </form>
@@ -57,16 +51,14 @@
       <!-- Formulaire de modification d'article -->
       <section id="edit-article-form" class="article-form" style="display: none;">
         <h2>Modifier un nouvel article</h2>
-        <form id="form-article" enctype="multipart/form-data">
+        <form id="edit-form-article" enctype="multipart/form-data">
           <input type="hidden" id="edit-article-id">
-          <label for="edit-title">Titre :</label>
-          <input type="text" id="edit-title" required>
-          <label for="edit-subtitle">Sous-titre :</label>
+          <input type="number" id="edit-order">
+          <input type="text" id="edit-title">
           <input type="text" id="edit-subtitle">
-          <label for="edit-image">Image :</label>
           <input type="text" id="edit-image">
-          <label for="edit-content">Contenu :</label>
-          <textarea id="edit-content" required></textarea>
+          <img id="edit-image-preview" src="" alt="Aperçu de l'image" style="max-width: 100px; max-height: 100px; display: none; margin-left: 10px;">
+          <textarea id="edit-content"></textarea>
           <button type="submit">Mettre à jour</button>
           <button type="button" id="edit-cancel-button">Annuler</button>
         </form>
