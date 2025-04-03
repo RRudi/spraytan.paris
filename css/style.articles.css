@@ -2,7 +2,7 @@
 
 .insta {
     margin: auto;
-    margin-top: 65px;
+    margin-top: 75px;
     background-color: #000;
   }
   
@@ -86,19 +86,26 @@
   .insta-container-texte p:first-child {
     margin-bottom: 2rem;
   }
-  
+
   .insta-container-texte .telephone {
     font-size: 1rem;
-    color: var(--couleur-principale);
     font-weight: 700;
-    margin-top: 20px;
+    margin-top: 10px;
     display: flex;
-    justify-content: flex-end;
-  }
+    justify-content: space-evenly;
+    align-items: center;
+}
   
   .insta-container-texte .telephone i {
+    font-size: 1.7rem;
+    color: rgb(37, 211, 102);
     margin-right: 10px;
-    font-size: 1.2rem;
+  }
+  
+  .insta-container-texte .telephone span {
+    color: rgb(37, 211, 102);
+    font-family: 'Helvetica Neue', sans-serif; 
+    font-weight: 700;
   }
   
   .insta-container-texte .marque {

@@ -264,6 +264,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Afficher le formulaire de création d'article lorsque le bouton est cliqué
   document.getElementById('add-article-button').addEventListener('click', () => {
+    console.log('Afficher le formulaire');
     document.getElementById('add-article-form').style.display = 'block';
   });
 
