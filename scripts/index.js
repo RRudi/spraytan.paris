@@ -199,7 +199,7 @@ async function getAvisFromAPI() {
     
     // TODO : Stocker puis récupération le locationID et l'API Key en base de données
     // const locationId = "ChIJLbLF2Apy5kcRj7Ph2H2iCSg";
-    // const apiKey = "AIzaSyDU3scYnhJFTiJYH7mIixw9PaGDD0cTZUY";
+    // const apiKey = "Recuperer sur https://console.cloud.google.com/apis/credentials?hl=fr&invt=Abt4Gw&project=spraytan-c3749";
 
     // const url = `https://maps.googleapis.com/maps/api/place/details/json?place_id=${locationId}&fields=name,rating,reviews&key=${apiKey}`;
     const url = `https://jsonplaceholder.typicode.com/users`;
