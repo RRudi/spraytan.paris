@@ -42,9 +42,10 @@
         <h2>Ajouter un nouvel article</h2>
         <form id="add-form-article" enctype="multipart/form-data">
           <input type="hidden" id="article-id" />
-          <input type="text" id="title" placeholder="Titre de l'article" required />
+          <input type="text" id="title" placeholder="Titre de l'article" required maxlength="40" oninput="updateCount()" /><span id="count">0 / 50</span>
           <input type="text" id="subtitle" placeholder="Sous-Titre de l'article" required />
           <input type="text" id="image" placeholder="URL de l'image" />
+          <input type="file" id="upload-image" accept="image/*" />
           <textarea id="content" placeholder="Écrivez le contenu de l'article ici..." required></textarea>
           <button type="submit">Enregistrer</button>
           <button type="button" id="cancel-button">Annuler</button>
@@ -57,9 +58,10 @@
         <form id="edit-form-article" enctype="multipart/form-data">
           <input type="hidden" id="edit-article-id">
           <input type="number" id="edit-order">
-          <input type="text" id="edit-title">
+          <input type="text" id="edit-title" maxlength="40" oninput="updateCount()" /><span id="count">0 / 50</span>
           <input type="text" id="edit-subtitle">
           <input type="text" id="edit-image">
+          <input type="file" id="edit-upload-image" accept="image/*" />
           <img id="edit-image-preview" src="" alt="Aperçu de l'image" style="max-width: 100px; max-height: 100px; display: none; margin-left: 10px;">
           <textarea id="edit-content"></textarea>
           <button type="submit">Mettre à jour</button>
@@ -68,5 +70,12 @@
       </section>
 
     <script type="module" src="./scripts/admin.js"></script>
+    <script>
+      function updateCount() {
+        const input = document.getElementById("title");
+        const count = document.getElementById("count");
+        count.textContent = `${input.value.length} / ${input.maxLength}`;
+      }
+    </script>
   </body>
 </html>

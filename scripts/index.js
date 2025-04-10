@@ -70,6 +70,14 @@ async function getListeArticle() {
         </div>
       </article>
     `).join('');
+    
+    if (window.location.href.includes("//spraytan.paris/")) {
+      console.info("✅ Le compteur d'appel est mis à jour");
+      await updateCompteurGetArticles();
+    }
+    else {
+      console.info("⚠️ Le compteur d'appel n'est pas mis à jour car l'URL ne correspond pas à l'environnement de production.");
+    }
 
   } catch (error) {
     console.error('Erreur lors du chargement des articles :', error.message);
@@ -78,6 +86,20 @@ async function getListeArticle() {
   }
 
   console.info("✅ Fin de la récupération des articles en base de données");
+}
+
+async function updateCompteurGetArticles() {
+  const collectionAdministration = collection(db, 'administration');
+  const snapshot = await getDocs(collectionAdministration);
+  const info = snapshot.docs.find(doc => doc.id === "vUe53lHeUzvtElioOgxb");
+  const data = info.data();
+  console.info("data.compteur_getArticles : ", data.compteur_getArticles);
+
+  const test = doc(db, 'administration', "vUe53lHeUzvtElioOgxb");
+  await updateDoc(test, {
+    compteur_getArticles: data.compteur_getArticles + 1,
+    date_derniere_recuperation: new Date().toISOString()
+  });
 }
 
 async function getListeAvis() {
