@@ -4,5 +4,8 @@
   "description": "Site web SprayTan Paris by Tata Fatia",
   "scripts": {
     "build": "node scripts/build.js"
+  },
+  "dependencies": {
+    "@netlify/blobs": "^10.7.4"
   }
 }
