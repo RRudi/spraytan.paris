@@ -3,79 +3,132 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>⚙️ Administration</title>
-    <link rel="stylesheet" href="../css/style.admin.css" />
-    <script src="scripts/tinymce/js/tinymce/tinymce.min.js"></script>
-    <script>
-    </script>
+    <title>⚙️ Administration - SprayTan Paris</title>
+    <link rel="stylesheet" href="./css/style.admin.css" />
   </head>
   <body>
-    
-    <!-- Formulaire de connexion -->
-    <div id="login-container">
-      <h1>Connexion Admin</h1>
-      <form id="login-form">
-        <label for="username">Nom d'utilisateur :</label>
-        <input type="text" id="username" required />
-        <label for="password">Mot de passe :</label>
-        <input type="password" id="password" required />
-        <button type="submit">Se connecter</button>
-      </form>
-      <p id="login-error" style="color: red; display: none;">Identifiants incorrects.</p>
+
+    <!-- Notifications toast -->
+    <div id="toast-container" aria-live="polite"></div>
+
+    <!-- ── Écran de connexion ─────────────────────────────── -->
+    <div id="login-screen">
+      <div id="login-card">
+        <div class="login-logo">⚙️</div>
+        <h1>Administration</h1>
+        <p class="login-subtitle">SprayTan Paris</p>
+        <form id="login-form" novalidate>
+          <div class="form-group">
+            <label for="email">Adresse e-mail</label>
+            <input type="email" id="email" placeholder="admin@example.com" required autocomplete="email" />
+          </div>
+          <div class="form-group">
+            <label for="password">Mot de passe</label>
+            <input type="password" id="password" placeholder="••••••••" required autocomplete="current-password" />
+          </div>
+          <p id="login-error" class="error-msg" hidden></p>
+          <button type="submit" id="login-btn" class="btn btn-primary">Se connecter</button>
+        </form>
+      </div>
     </div>
-    
-    <div id="admin-container" style="display: none;">
-      <h1>⚙️ Administration</h1>
-      
-      <!-- Liste des articles -->
-      <section id="articles-list">
-        <center>
-          <button onclick="window.location.href='/'">⬅ Retour au site</button>
-          <button id="add-article-button">➕ Ajouter un article</button>
-        </center>
-        <h2>📃 Il y a <span id="articles-number"></span> articles</h2>
+
+    <!-- ── Tableau de bord admin ──────────────────────────── -->
+    <div id="admin-screen" hidden>
+
+      <header id="admin-header">
+        <div class="header-left">
+          <h1>⚙️ Administration</h1>
+          <span class="header-subtitle">SprayTan Paris</span>
+        </div>
+        <div class="header-actions">
+          <a href="/" class="btn btn-secondary">← Retour au site</a>
+          <button id="logout-btn" class="btn btn-danger">Déconnexion</button>
+        </div>
+      </header>
+
+      <main id="admin-main">
+        <div class="dashboard-header">
+          <div>
+            <h2>📃 Articles</h2>
+            <p id="articles-count" class="articles-count">Chargement…</p>
+          </div>
+          <button id="add-article-btn" class="btn btn-primary">+ Nouvel article</button>
+        </div>
+
+        <div id="loading-articles" class="loading-state">
+          <div class="spinner-lg"></div>
+          <p>Chargement des articles…</p>
+        </div>
+
         <div id="articles-container"></div>
-      </section>
+      </main>
+    </div>
 
-      <!-- Formulaire de création d'article -->
-      <section id="add-article-form" class="article-form" style="display: none;">
-        <h2>Ajouter un nouvel article</h2>
-        <form id="add-form-article" enctype="multipart/form-data">
-          <input type="hidden" id="article-id" />
-          <input type="text" id="title" placeholder="Titre de l'article" required maxlength="40" oninput="updateCount()" /><span id="count">0 / 50</span>
-          <input type="text" id="subtitle" placeholder="Sous-Titre de l'article" required />
-          <input type="text" id="image" placeholder="URL de l'image" />
-          <input type="file" id="upload-image" accept="image/*" />
-          <textarea id="content" placeholder="Écrivez le contenu de l'article ici..." required></textarea>
-          <button type="submit">Enregistrer</button>
-          <button type="button" id="cancel-button">Annuler</button>
-        </form>
-      </section>
+    <!-- ── Modal ajout / modification article ────────────── -->
+    <div id="article-modal" class="modal-overlay" hidden>
+      <div class="modal">
+        <div class="modal-header">
+          <h2 id="modal-title">Ajouter un article</h2>
+          <button id="modal-close" class="btn-icon" title="Fermer" aria-label="Fermer">✕</button>
+        </div>
+        <div class="modal-body">
+          <form id="article-form" novalidate>
+            <input type="hidden" id="form-article-id" />
 
-      <!-- Formulaire de modification d'article -->
-      <section id="edit-article-form" class="article-form" style="display: none;">
-        <h2>Modifier un nouvel article</h2>
-        <form id="edit-form-article" enctype="multipart/form-data">
-          <input type="hidden" id="edit-article-id">
-          <input type="number" id="edit-order">
-          <input type="text" id="edit-title" maxlength="40" oninput="updateCount()" /><span id="count">0 / 50</span>
-          <input type="text" id="edit-subtitle">
-          <input type="text" id="edit-image">
-          <input type="file" id="edit-upload-image" accept="image/*" />
-          <img id="edit-image-preview" src="" alt="Aperçu de l'image" style="max-width: 100px; max-height: 100px; display: none; margin-left: 10px;">
-          <textarea id="edit-content"></textarea>
-          <button type="submit">Mettre à jour</button>
-          <button type="button" id="edit-cancel-button">Annuler</button>
-        </form>
-      </section>
+            <div class="form-row">
+              <div class="form-group flex-1">
+                <label for="form-title">Titre <span class="required">*</span></label>
+                <input type="text" id="form-title" placeholder="Titre de l'article" required maxlength="40" />
+                <span class="char-count" id="title-count">0 / 40</span>
+              </div>
+              <div class="form-group w-20">
+                <label for="form-order">Ordre</label>
+                <input type="number" id="form-order" min="1" placeholder="1" />
+              </div>
+            </div>
 
+            <div class="form-group">
+              <label for="form-subtitle">Sous-titre</label>
+              <input type="text" id="form-subtitle" placeholder="Sous-titre de l'article" />
+            </div>
+
+            <div class="form-group">
+              <label for="form-image">URL de l'image</label>
+              <input type="url" id="form-image" placeholder="https://…" />
+              <img id="form-image-preview" src="" alt="Aperçu de l'image" class="image-preview" hidden />
+            </div>
+
+            <div class="form-group">
+              <label for="form-content">Contenu <span class="required">*</span></label>
+              <textarea id="form-content" rows="8" placeholder="Contenu de l'article…"></textarea>
+            </div>
+
+            <div class="modal-footer">
+              <button type="button" id="form-cancel" class="btn btn-secondary">Annuler</button>
+              <button type="submit" id="form-submit" class="btn btn-primary">Enregistrer</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── Modal confirmation suppression ────────────────── -->
+    <div id="confirm-modal" class="modal-overlay" hidden>
+      <div class="modal modal-sm">
+        <div class="modal-header">
+          <h2>Confirmer la suppression</h2>
+        </div>
+        <div class="modal-body">
+          <p>Êtes-vous sûr de vouloir supprimer cet article ? Cette action est irréversible.</p>
+          <div class="modal-footer">
+            <button id="confirm-cancel" class="btn btn-secondary">Annuler</button>
+            <button id="confirm-delete" class="btn btn-danger">Supprimer</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="scripts/tinymce/js/tinymce/tinymce.min.js"></script>
     <script type="module" src="./scripts/admin.js"></script>
-    <script>
-      function updateCount() {
-        const input = document.getElementById("title");
-        const count = document.getElementById("count");
-        count.textContent = `${input.value.length} / ${input.maxLength}`;
-      }
-    </script>
   </body>
 </html>

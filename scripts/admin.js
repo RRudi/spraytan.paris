@@ -1,323 +1,372 @@
-import { db } from './firebaseConfig.js';
-import { collection, getDocs, addDoc, query, where, updateDoc, deleteDoc, doc } from 'https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js';
+import { db, auth } from './firebaseConfig.js';
+import {
+  signInWithEmailAndPassword,
+  signOut,
+  onAuthStateChanged
+} from 'https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js';
+import {
+  collection, getDocs, addDoc, updateDoc, deleteDoc, doc
+} from 'https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js';
 
-let nombreArticles = 0; // Variable globale pour stocker le nombre d'articles
+// ─── État global ──────────────────────────────────────────────────────────────
+let articles = [];
+let pendingDeleteId = null;
 
-async function getListeArticle() {
-  try {
-    // Récupération des articles en base
-    const collectionArticles = collection(db, 'articles');
-    const articlesSnapshot = await getDocs(collectionArticles);
-    const listeArticle = articlesSnapshot.docs.map(doc => ({
-      id: doc.id, // Récupération de l'ID du document
-      ...doc.data() // Récupération des données du document
-    }));
-
-    // Tri des articles par ordre du champ 'ordre_affichage'
-    listeArticle.sort((a, b) => a.ordre_affichage - b.ordre_affichage);
-
-    console.log("listeArticle : ", listeArticle);
-
-    if (!Array.isArray(listeArticle) || listeArticle.length === 0) {
-      throw new Error('Aucun article trouvé dans la base de données.');
-    }
-
-    nombreArticles = listeArticle.length; // Stocker le nombre d'articles
-    console.log("Nombre d'articles :", nombreArticles);
-
-    // Mettre à jour le contenu de <span id="articles-number">
-    document.getElementById('articles-number').textContent = nombreArticles;
-
-    // Récupération de la classe <div class="insta-container">
-    const container = document.getElementById('articles-container');
-    // Insertion du code HTML des articles dans le container
-    container.innerHTML = listeArticle.map(article => `
-      <div class="article-item" data-id="${article.id}">
-        <h3 title="ID: ${article.id}">${article.ordre_affichage} - ${article.titre}</h3>
-        <div class="article-actions">
-          <button title="Modifier" onclick="editArticle('${article.id}')">✏️</button>
-          <button title="Afficher" onclick="updateStatus('${article.id}', ${article.est_actif})">
-            ${article.est_actif ? '🐵' : '🙈'}
-          </button>
-          <button title="Dupliquer" onclick="duplicateArticle('${article.id}')">✌️</button>
-          <button title="Supprimer" onclick="deleteArticle('${article.id}')">🗑️</button>
-        </div>
-      </div>
-    `).join('');
-
-  } catch (error) {
-    console.error('Erreur lors du chargement des articles :', error.message);
-    const container = document.querySelector('.articles-container');
-    container.innerHTML = `<p>Impossible de charger les articles pour le moment. Veuillez réessayer plus tard.</p>`;
-  }
+// ─── Toast notifications ──────────────────────────────────────────────────────
+function showToast(message, type = 'success') {
+  const container = document.getElementById('toast-container');
+  const toast = document.createElement('div');
+  toast.className = `toast toast-${type}`;
+  toast.textContent = message;
+  container.appendChild(toast);
+  requestAnimationFrame(() => toast.classList.add('show'));
+  setTimeout(() => {
+    toast.classList.remove('show');
+    setTimeout(() => toast.remove(), 300);
+  }, 3500);
 }
 
-async function addArticle(event) {
-  event.preventDefault(); // Empêche le rechargement de la page lors de la soumission du formulaire
+// ─── Authentification ─────────────────────────────────────────────────────────
+function showLoginScreen() {
+  document.getElementById('login-screen').hidden = false;
+  document.getElementById('admin-screen').hidden = true;
+  document.getElementById('login-error').hidden = true;
+  document.getElementById('login-form').reset();
+}
 
-  const champs_titre = document.getElementById('title').value.trim();
-  const champs_soustitre = document.getElementById('subtitle').value.trim();
-  const champs_contenu = document.getElementById('content').value.trim();
-  const champs_image = document.getElementById('image').value.trim();
+function showAdminScreen() {
+  document.getElementById('login-screen').hidden = true;
+  document.getElementById('admin-screen').hidden = false;
+  loadArticles();
+}
 
-  if (!champs_titre || !champs_contenu) {
-    console.error('Le titre et le contenu sont obligatoires.');
-    return;
-  }
+async function handleLogin(event) {
+  event.preventDefault();
+  const email = document.getElementById('email').value.trim();
+  const password = document.getElementById('password').value;
+  const errorEl = document.getElementById('login-error');
+  const btn = document.getElementById('login-btn');
+
+  errorEl.hidden = true;
+  btn.disabled = true;
+  btn.textContent = 'Connexion…';
 
   try {
-    const collectionArticles = collection(db, 'articles');
-    const newArticle = {
-      titre: champs_titre,
-      sous_titre: champs_soustitre,
-      contenu: champs_contenu,
-      image: champs_image,
-      est_actif: true,
-      ordre_affichage: nombreArticles + 1, // Utilisation de la variable pour définir l'ordre
-      date_creation: new Date().toISOString() // Ajout de la date actuelle
+    await signInWithEmailAndPassword(auth, email, password);
+  } catch (err) {
+    const messages = {
+      'auth/invalid-email': 'Adresse e-mail invalide.',
+      'auth/user-not-found': 'Identifiants incorrects.',
+      'auth/wrong-password': 'Identifiants incorrects.',
+      'auth/invalid-credential': 'Identifiants incorrects.',
+      'auth/too-many-requests': 'Trop de tentatives. Réessayez plus tard.'
     };
-    await addDoc(collectionArticles, newArticle);
-    console.log('Article créé avec succès:', newArticle);
-
-    // Masquer le formulaire après la création de l'article
-    const articleForm = document.getElementById('add-article-form');
-    if (articleForm) {
-      articleForm.style.display = 'none';
-    }
-
-    // Recharger la liste des articles
-    getListeArticle();
-
-  } catch (error) {
-    console.error('Erreur lors de la création de l\'article :', error.message);
+    errorEl.textContent = messages[err.code] || 'Erreur de connexion. Veuillez réessayer.';
+    errorEl.hidden = false;
+  } finally {
+    btn.disabled = false;
+    btn.textContent = 'Se connecter';
   }
 }
 
-async function checkAdmin(event) {
-  console.log('checkAdmin');
+async function handleLogout() {
+  await signOut(auth);
+}
+
+// ─── Chargement et affichage des articles ─────────────────────────────────────
+async function loadArticles() {
+  document.getElementById('loading-articles').hidden = false;
+  document.getElementById('articles-container').innerHTML = '';
+
   try {
-    event.preventDefault(); // Empêche le rechargement de la page lors de la soumission du formulaire
-  
-    const champs_username= document.getElementById('username').value.trim();
-    const champs_password = document.getElementById('password').value.trim();
-
-    const adminCollection = collection(db, 'administration');
-    const q = query(adminCollection, where('utilisateur', '==', champs_username), where('motdepasse', '==', champs_password));
-    const querySnapshot = await getDocs(q);
-
-    let isValid = !querySnapshot.empty; // Retourne true si les identifiants sont valides
-    console.log('checkAdmin : isValid : ', isValid);
-
-    if (isValid) {
-      document.getElementById('login-container').style.display = 'none';
-      document.getElementById('admin-container').style.display = 'block';
-    } else {
-      const errorElement = document.getElementById('login-error');
-      errorElement.style.display = 'block';
-    }
-
-  } catch (error) {
-    console.error('Erreur lors de la vérification des identifiants :', error.message);
-    return false;
+    const snapshot = await getDocs(collection(db, 'articles'));
+    articles = snapshot.docs.map(d => ({ id: d.id, ...d.data() }));
+    articles.sort((a, b) => (a.ordre_affichage || 0) - (b.ordre_affichage || 0));
+    renderArticles();
+  } catch (err) {
+    console.error(err);
+    showToast('Erreur lors du chargement des articles.', 'error');
+  } finally {
+    document.getElementById('loading-articles').hidden = true;
   }
 }
 
-async function editArticle(articleId) {
-  console.log('editArticle');
-  try {
-    const collectionArticles = collection(db, 'articles');
-    const articlesSnapshot = await getDocs(collectionArticles);
-    const articleDoc = articlesSnapshot.docs.find(doc => doc.id === articleId);
-
-    if (articleDoc) {
-      const articleData = articleDoc.data();
-      console.log('articleData : ', articleData);
-      document.getElementById('edit-article-id').value = articleId;
-      document.getElementById('edit-title').value = articleData.titre;
-      document.getElementById('edit-order').value = articleData.ordre_affichage;
-      document.getElementById('edit-subtitle').value = articleData.sous_titre;
-      document.getElementById('edit-image').value = articleData.image;
-      document.getElementById('edit-image-preview').src = articleData.image; // Ajouter la source de l'image
-      document.getElementById('edit-image-preview').style.display = articleData.image ? 'inline' : 'none'; // Afficher ou masquer l'aperçu
-      tinymce.get("edit-content").setContent(articleData.contenu);
-
-      // Afficher le formulaire de modification
-      document.getElementById('edit-article-form').style.display = 'block';
-    } else {
-      console.error('Article introuvable.');
-    }
-  } catch (error) {
-    console.error('Erreur lors de l\'édition de l\'article :', error.message);
-  }
+function escapeHtml(str) {
+  const el = document.createElement('div');
+  el.appendChild(document.createTextNode(str || ''));
+  return el.innerHTML;
 }
 
-async function updateArticle(event) {
-  event.preventDefault(); // Empêche le rechargement de la page lors de la soumission du formulaire
+function renderArticles() {
+  const count = articles.length;
+  document.getElementById('articles-count').textContent =
+    count === 0 ? 'Aucun article' : `${count} article${count > 1 ? 's' : ''}`;
 
-  const articleId = document.getElementById('edit-article-id').value;
-  const order = document.getElementById('edit-order').value;
-  const titre = document.getElementById('edit-title').value.trim();
-  const sousTitre = document.getElementById('edit-subtitle').value.trim();
-  const image = document.getElementById('edit-image').value.trim();
-  const contenu = document.getElementById('edit-content').value.trim();
+  const container = document.getElementById('articles-container');
 
-  if (!titre || !contenu) {
-    console.error('Le titre et le contenu sont obligatoires.');
+  if (count === 0) {
+    container.innerHTML = '<p class="empty-state">Aucun article pour le moment. Créez votre premier article !</p>';
     return;
   }
 
-  try {
-    const articleRef = doc(db, 'articles', articleId);
-    await updateDoc(articleRef, {
-      ordre_affichage: order,
-      titre,
-      sous_titre: sousTitre,
-      image,
-      contenu
-    });
-    console.log('Article mis à jour avec succès.');
-
-    // Masquer le formulaire de modification après la mise à jour
-    document.getElementById('edit-article-form').style.display = 'none';
-
-    // Recharger la liste des articles
-    getListeArticle();
-  } catch (error) {
-    console.error('Erreur lors de la mise à jour de l\'article :', error.message);
-  }
+  container.innerHTML = articles.map(article => `
+    <div class="article-row${article.est_actif ? '' : ' article-inactive'}" data-id="${article.id}">
+      <div class="article-info">
+        <span class="article-order">#${article.ordre_affichage ?? '–'}</span>
+        <div class="article-details">
+          <span class="article-title">${escapeHtml(article.titre || 'Sans titre')}</span>
+          ${article.sous_titre ? `<span class="article-subtitle">${escapeHtml(article.sous_titre)}</span>` : ''}
+        </div>
+        <span class="article-status ${article.est_actif ? 'status-active' : 'status-inactive'}">
+          ${article.est_actif ? 'Actif' : 'Inactif'}
+        </span>
+      </div>
+      <div class="article-actions">
+        <button class="btn-action btn-edit"      data-id="${article.id}" title="Modifier">✏️ Modifier</button>
+        <button class="btn-action btn-toggle"    data-id="${article.id}" data-active="${article.est_actif}" title="${article.est_actif ? 'Masquer' : 'Afficher'}">
+          ${article.est_actif ? '🙈 Masquer' : '👁 Afficher'}
+        </button>
+        <button class="btn-action btn-duplicate" data-id="${article.id}" title="Dupliquer">📋 Dupliquer</button>
+        <button class="btn-action btn-delete"    data-id="${article.id}" title="Supprimer">🗑 Supprimer</button>
+      </div>
+    </div>
+  `).join('');
 }
 
-async function deleteArticle(articleId) {
-  console.log('deleteArticle');
-  try {
-    const articleRef = doc(db, 'articles', articleId);
-    await deleteDoc(articleRef);
-    console.log('Article supprimé avec succès.');
-    getListeArticle(); // Recharger la liste des articles
-  } catch (error) {
-    console.error('Erreur lors de la suppression de l\'article :', error.message);
+// ─── Modal article (ajout et modification) ────────────────────────────────────
+function openModal(article = null) {
+  const idField       = document.getElementById('form-article-id');
+  const titleField    = document.getElementById('form-title');
+  const subtitleField = document.getElementById('form-subtitle');
+  const orderField    = document.getElementById('form-order');
+  const imageField    = document.getElementById('form-image');
+  const preview       = document.getElementById('form-image-preview');
+  const modalTitle    = document.getElementById('modal-title');
+
+  if (article) {
+    modalTitle.textContent    = "Modifier l'article";
+    idField.value             = article.id;
+    titleField.value          = article.titre || '';
+    subtitleField.value       = article.sous_titre || '';
+    orderField.value          = article.ordre_affichage || '';
+    imageField.value          = article.image || '';
+    preview.src               = article.image || '';
+    preview.hidden            = !article.image;
+    const editor = tinymce.get('form-content');
+    if (editor) editor.setContent(article.contenu || '');
+  } else {
+    modalTitle.textContent = 'Ajouter un article';
+    idField.value          = '';
+    titleField.value       = '';
+    subtitleField.value    = '';
+    orderField.value       = articles.length + 1;
+    imageField.value       = '';
+    preview.hidden         = true;
+    const editor = tinymce.get('form-content');
+    if (editor) editor.setContent('');
   }
+
+  updateTitleCount();
+  document.getElementById('article-modal').hidden = false;
+  document.body.style.overflow = 'hidden';
+  titleField.focus();
 }
 
-async function updateStatus(id, currentStatus) {
-  console.log('toggleArticleStatus() :', id);
-  try {
-    const collectionArticles = collection(db, 'articles');
-    const articlesSnapshot = await getDocs(collectionArticles);
-    const articleDoc = articlesSnapshot.docs.find(doc => doc.id === id);
+function closeModal() {
+  document.getElementById('article-modal').hidden = true;
+  document.body.style.overflow = '';
+}
 
-    if (articleDoc) {
-      await updateDoc(articleDoc.ref, { est_actif: !currentStatus });
-      console.log('Statut de l\'article mis à jour.');
-      getListeArticle(); // Recharger la liste des articles
+async function handleArticleSubmit(event) {
+  event.preventDefault();
+
+  const id        = document.getElementById('form-article-id').value;
+  const titre     = document.getElementById('form-title').value.trim();
+  const sous_titre = document.getElementById('form-subtitle').value.trim();
+  const ordre     = parseInt(document.getElementById('form-order').value) || (articles.length + 1);
+  const image     = document.getElementById('form-image').value.trim();
+
+  const editor  = tinymce.get('form-content');
+  const contenu = editor ? editor.getContent() : document.getElementById('form-content').value.trim();
+
+  if (!titre) {
+    showToast('Le titre est obligatoire.', 'error');
+    return;
+  }
+  if (!contenu || contenu === '<p></p>' || contenu === '<p><br></p>') {
+    showToast('Le contenu est obligatoire.', 'error');
+    return;
+  }
+
+  const submitBtn = document.getElementById('form-submit');
+  submitBtn.disabled    = true;
+  submitBtn.textContent = 'Enregistrement…';
+
+  try {
+    if (id) {
+      await updateDoc(doc(db, 'articles', id), {
+        titre, sous_titre, ordre_affichage: ordre, image, contenu
+      });
+      showToast('Article mis à jour avec succès !');
     } else {
-      console.error('Article introuvable.');
-    }
-
-    // Recharger la liste des articles
-    getListeArticle();
-  } catch (error) {
-    console.error('Erreur lors de la mise à jour du statut de l\'article :', error.message);
-  }
-}
-
-async function duplicateArticle(articleId) {
-  console.log('duplicateArticle');
-  try {
-    const collectionArticles = collection(db, 'articles');
-    const articlesSnapshot = await getDocs(collectionArticles);
-    const articleDoc = articlesSnapshot.docs.find(doc => doc.id === articleId);
-
-    if (articleDoc) {
-      const articleData = articleDoc.data();
-      const newArticle = {
-        ...articleData,
-        titre: `${articleData.titre} (Copie)`,
+      await addDoc(collection(db, 'articles'), {
+        titre, sous_titre, contenu, image,
+        est_actif: true,
+        ordre_affichage: ordre,
         date_creation: new Date().toISOString()
-      };
-      delete newArticle.id; // Supprimer l'ID pour éviter les conflits
-      await addDoc(collectionArticles, newArticle);
-      console.log('Article dupliqué avec succès:', newArticle);
-      getListeArticle(); // Recharger la liste des articles
-    } else {
-      console.error('Article introuvable.');
+      });
+      showToast('Article créé avec succès !');
     }
-  } catch (error) {
-    console.error('Erreur lors de la duplication de l\'article :', error.message);
+    closeModal();
+    await loadArticles();
+  } catch (err) {
+    console.error(err);
+    showToast("Erreur lors de l'enregistrement.", 'error');
+  } finally {
+    submitBtn.disabled    = false;
+    submitBtn.textContent = 'Enregistrer';
   }
 }
 
-// Rendre les fonctions accessibles globalement
-window.updateStatus = updateStatus;
-window.editArticle = editArticle;
-window.deleteArticle = deleteArticle;
-window.duplicateArticle = duplicateArticle;
+// ─── Actions sur les articles ─────────────────────────────────────────────────
+async function toggleArticleStatus(id, currentActive) {
+  try {
+    await updateDoc(doc(db, 'articles', id), { est_actif: !currentActive });
+    showToast(currentActive ? 'Article masqué.' : 'Article affiché.');
+    await loadArticles();
+  } catch (err) {
+    console.error(err);
+    showToast('Erreur lors de la mise à jour du statut.', 'error');
+  }
+}
 
+function openConfirmDelete(id) {
+  pendingDeleteId = id;
+  document.getElementById('confirm-modal').hidden = false;
+  document.body.style.overflow = 'hidden';
+}
+
+function cancelDelete() {
+  pendingDeleteId = null;
+  document.getElementById('confirm-modal').hidden = true;
+  document.body.style.overflow = '';
+}
+
+async function executeDelete() {
+  if (!pendingDeleteId) return;
+  const id = pendingDeleteId;
+  cancelDelete();
+  try {
+    await deleteDoc(doc(db, 'articles', id));
+    showToast('Article supprimé.');
+    await loadArticles();
+  } catch (err) {
+    console.error(err);
+    showToast('Erreur lors de la suppression.', 'error');
+  }
+}
+
+async function duplicateArticle(id) {
+  const article = articles.find(a => a.id === id);
+  if (!article) return;
+  try {
+    const { id: _id, ...data } = article;
+    await addDoc(collection(db, 'articles'), {
+      ...data,
+      titre: `${data.titre} (Copie)`,
+      date_creation: new Date().toISOString()
+    });
+    showToast('Article dupliqué.');
+    await loadArticles();
+  } catch (err) {
+    console.error(err);
+    showToast('Erreur lors de la duplication.', 'error');
+  }
+}
+
+function updateTitleCount() {
+  const input = document.getElementById('form-title');
+  document.getElementById('title-count').textContent = `${input.value.length} / ${input.maxLength}`;
+}
+
+// ─── Initialisation ───────────────────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', () => {
-  // Récupérer la liste des articles
-  getListeArticle();
 
-  // Ajout de l'écoute des boutons Submit des formulaires (Identification, Creation et modification d'articles)
-  document.getElementById('login-form').addEventListener('submit', checkAdmin);
-  document.getElementById('add-article-form').addEventListener('submit', addArticle);
-  document.getElementById('edit-article-form').addEventListener('submit', updateArticle);
-
-  // Afficher le formulaire de création d'article lorsque le bouton est cliqué
-  document.getElementById('add-article-button').addEventListener('click', () => {
-    console.log('Afficher le formulaire');
-    document.getElementById('add-article-form').style.display = 'block';
-  });
-
-  // Masquer le formulaire de création d'article lorsque le bouton Annulé est cliqué
-  document.getElementById('cancel-button').addEventListener('click', () => {
-    document.getElementById('add-article-form').style.display = 'none';
-  });
-
-  // Masquer le formulaire de modification d'article lorsque le bouton Annulé est cliqué
-  document.getElementById('edit-cancel-button').addEventListener('click', () => {
-    document.getElementById('edit-article-form').style.display = 'none';
-  });
-
-  tinymce.init({
-    selector: "#content",
-    plugins: "lists link image code", // Ajout du plugin textcolor
-    toolbar:
-      "undo redo | styleselect | bold italic underline forecolor | alignleft aligncenter | bullist numlist outdent indent | link",
-    menubar: false,
-    height: 300,
-    hidden_input: false, // Désactive la création d'un champ masqué
-    setup: (editor) => {
-      editor.on("change", () => {
-        document.getElementById("content").value = editor.getContent();
-      });
-    },
-  });
-
-  tinymce.init({
-    selector: "#edit-content",
-    plugins: "lists link image code", // Ajout du plugin textcolor
-    toolbar:
-      "undo redo | styleselect | bold italic underline forecolor | alignleft aligncenter | bullist numlist outdent indent | link",
-    menubar: false,
-    height: 300,
-    hidden_input: false, // Désactive la création d'un champ masqué
-    setup: (editor) => {
-      editor.on("change", () => {
-        document.getElementById("edit-content").value = editor.getContent();
-      });
-    },
-  });
-
-  const editImageInput = document.getElementById("edit-image");
-  const editImagePreview = document.getElementById("edit-image-preview");
-
-  editImageInput.addEventListener("input", () => {
-    const imageUrl = editImageInput.value;
-    if (imageUrl) {
-      editImagePreview.src = imageUrl;
-      editImagePreview.style.display = "inline";
+  // Suivi de l'état d'authentification
+  onAuthStateChanged(auth, user => {
+    if (user) {
+      showAdminScreen();
     } else {
-      editImagePreview.style.display = "none";
+      showLoginScreen();
+    }
+  });
+
+  // Connexion
+  document.getElementById('login-form').addEventListener('submit', handleLogin);
+
+  // Déconnexion
+  document.getElementById('logout-btn').addEventListener('click', handleLogout);
+
+  // Ouvrir modal ajout
+  document.getElementById('add-article-btn').addEventListener('click', () => openModal());
+
+  // Fermer modal article
+  document.getElementById('modal-close').addEventListener('click', closeModal);
+  document.getElementById('form-cancel').addEventListener('click', closeModal);
+  document.getElementById('article-modal').addEventListener('click', e => {
+    if (e.target === e.currentTarget) closeModal();
+  });
+
+  // Soumettre le formulaire article
+  document.getElementById('article-form').addEventListener('submit', handleArticleSubmit);
+
+  // Compteur de caractères du titre
+  document.getElementById('form-title').addEventListener('input', updateTitleCount);
+
+  // Aperçu de l'image
+  document.getElementById('form-image').addEventListener('input', e => {
+    const url = e.target.value.trim();
+    const preview = document.getElementById('form-image-preview');
+    preview.src    = url;
+    preview.hidden = !url;
+  });
+
+  // Modal confirmation suppression
+  document.getElementById('confirm-cancel').addEventListener('click', cancelDelete);
+  document.getElementById('confirm-delete').addEventListener('click', executeDelete);
+  document.getElementById('confirm-modal').addEventListener('click', e => {
+    if (e.target === e.currentTarget) cancelDelete();
+  });
+
+  // Délégation d'événements sur la liste d'articles
+  document.getElementById('articles-container').addEventListener('click', e => {
+    const btn = e.target.closest('.btn-action');
+    if (!btn) return;
+    const id = btn.dataset.id;
+
+    if (btn.classList.contains('btn-edit')) {
+      const article = articles.find(a => a.id === id);
+      if (article) openModal(article);
+    } else if (btn.classList.contains('btn-toggle')) {
+      toggleArticleStatus(id, btn.dataset.active === 'true');
+    } else if (btn.classList.contains('btn-duplicate')) {
+      duplicateArticle(id);
+    } else if (btn.classList.contains('btn-delete')) {
+      openConfirmDelete(id);
+    }
+  });
+
+  // Initialisation TinyMCE (éditeur de contenu unique)
+  tinymce.init({
+    selector: '#form-content',
+    plugins: 'lists link code',
+    toolbar: 'undo redo | styleselect | bold italic underline | alignleft aligncenter | bullist numlist | link | code',
+    menubar: false,
+    height: 300,
+    setup: editor => {
+      editor.on('change input', () => {
+        document.getElementById('form-content').value = editor.getContent();
+      });
     }
   });
 });
