@@ -448,6 +448,106 @@ body {
   color: var(--text);
 }
 
+/* ── Éditeur de texte riche ───────────────────────────────────────────────── */
+.editor-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  flex-wrap: wrap;
+  padding: 6px 8px;
+  border: 1px solid var(--border);
+  border-bottom: none;
+  border-radius: var(--radius) var(--radius) 0 0;
+  background: var(--bg);
+}
+
+.toolbar-btn {
+  padding: 4px 10px;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  background: none;
+  cursor: pointer;
+  font-size: 13px;
+  color: var(--text);
+  line-height: 1.4;
+  transition: background .12s, border-color .12s;
+}
+.toolbar-btn:hover { background: var(--secondary-bg); border-color: var(--border); }
+.toolbar-btn:active { background: var(--secondary-hover); }
+
+.toolbar-sep {
+  display: inline-block;
+  width: 1px;
+  height: 20px;
+  background: var(--border);
+  margin: 0 4px;
+  vertical-align: middle;
+}
+
+.toolbar-color-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  cursor: pointer;
+  padding: 4px 8px;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  font-size: 13px;
+  font-weight: 700;
+  transition: background .12s;
+}
+.toolbar-color-label:hover { background: var(--secondary-bg); border-color: var(--border); }
+.toolbar-color-label input[type="color"] {
+  width: 20px;
+  height: 20px;
+  padding: 0;
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  cursor: pointer;
+  background: none;
+}
+
+.rich-editor {
+  min-height: 200px;
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  border-radius: 0 0 var(--radius) var(--radius);
+  font-size: 14px;
+  font-family: inherit;
+  line-height: 1.6;
+  outline: none;
+  background: #fff;
+  overflow-y: auto;
+}
+.rich-editor:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(196,154,108,.2);
+}
+
+/* ── Import de fichier image ─────────────────────────────────────────────── */
+.file-input {
+  display: block;
+  width: 100%;
+  padding: 8px 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  font-size: 14px;
+  cursor: pointer;
+  background: var(--card);
+  color: var(--text);
+}
+.file-input:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(196,154,108,.2);
+}
+
+.upload-status {
+  margin-top: 6px;
+  font-size: 12px;
+  color: var(--text-light);
+}
+
 /* ── Avis ─────────────────────────────────────────────────────────────────── */
 .avis-info {
   display: flex;

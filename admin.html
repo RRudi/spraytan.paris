@@ -144,14 +144,32 @@
             </div>
 
             <div class="form-group">
-              <label for="form-image">URL de l'image</label>
-              <input type="url" id="form-image" placeholder="https://…" />
+              <label>Image</label>
+              <input type="file" id="form-image-file" accept="image/*" class="file-input" />
+              <div id="form-image-upload-status" class="upload-status" hidden></div>
               <img id="form-image-preview" src="" alt="Aperçu de l'image" class="image-preview" hidden />
+              <input type="hidden" id="form-image" />
             </div>
 
             <div class="form-group">
-              <label for="form-content">Contenu <span class="required">*</span></label>
-              <textarea id="form-content" rows="8" placeholder="Contenu de l'article…"></textarea>
+              <label>Contenu <span class="required">*</span></label>
+              <div id="editor-toolbar" class="editor-toolbar">
+                <button type="button" class="toolbar-btn" data-cmd="bold" title="Gras"><b>G</b></button>
+                <button type="button" class="toolbar-btn" data-cmd="italic" title="Italique"><i>I</i></button>
+                <button type="button" class="toolbar-btn" data-cmd="underline" title="Souligné"><u>S</u></button>
+                <button type="button" class="toolbar-btn" data-cmd="strikeThrough" title="Barré"><s>A</s></button>
+                <span class="toolbar-sep"></span>
+                <button type="button" class="toolbar-btn" data-cmd="insertUnorderedList" title="Liste à puces">☰</button>
+                <button type="button" class="toolbar-btn" data-cmd="insertOrderedList" title="Liste numérotée">1.</button>
+                <span class="toolbar-sep"></span>
+                <label class="toolbar-color-label" title="Couleur du texte">
+                  <span>A</span>
+                  <input type="color" id="toolbar-color" value="#000000" />
+                </label>
+                <span class="toolbar-sep"></span>
+                <button type="button" class="toolbar-btn" data-cmd="removeFormat" title="Effacer la mise en forme">✕</button>
+              </div>
+              <div id="form-content" contenteditable="true" class="rich-editor" aria-label="Contenu de l'article" aria-multiline="true" role="textbox"></div>
             </div>
 
             <div class="modal-footer">
@@ -225,7 +243,6 @@
       </div>
     </div>
 
-    <script src="scripts/tinymce/js/tinymce/tinymce.min.js"></script>
     <script type="module" src="./scripts/admin.js"></script>
   </body>
 </html>
