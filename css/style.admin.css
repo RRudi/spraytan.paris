@@ -392,3 +392,88 @@ body {
   .article-row         { flex-direction: column; align-items: flex-start; }
   .article-info        { width: 100%; }
 }
+
+/* ── Onglets ──────────────────────────────────────────────────────────────── */
+.tabs {
+  display: flex;
+  border-bottom: 2px solid var(--border);
+  margin-bottom: 28px;
+  gap: 0;
+}
+
+.tab-btn {
+  padding: 10px 22px;
+  border: none;
+  background: none;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-light);
+  border-bottom: 2px solid transparent;
+  margin-bottom: -2px;
+  transition: color .15s, border-color .15s;
+}
+.tab-btn.active        { color: var(--primary); border-bottom-color: var(--primary); }
+.tab-btn:hover:not(.active) { color: var(--text); }
+
+/* ── Drag & drop ──────────────────────────────────────────────────────────── */
+.drag-handle {
+  cursor: grab;
+  color: var(--text-light);
+  font-size: 20px;
+  padding: 0 6px;
+  user-select: none;
+  flex-shrink: 0;
+  line-height: 1;
+}
+.drag-handle:active { cursor: grabbing; }
+
+.article-row.dragging  { opacity: .35; }
+.article-row.drag-over {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 2px rgba(196,154,108,.35);
+}
+
+/* ── Paramètres Google ────────────────────────────────────────────────────── */
+.settings-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 20px 24px;
+  margin-bottom: 8px;
+}
+.settings-title {
+  margin: 0 0 16px;
+  font-size: 15px;
+  color: var(--text);
+}
+
+/* ── Avis ─────────────────────────────────────────────────────────────────── */
+.avis-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex: 1;
+  min-width: 0;
+}
+
+.avis-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 1px solid var(--border);
+  flex-shrink: 0;
+}
+.avis-avatar-placeholder {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  flex-shrink: 0;
+}

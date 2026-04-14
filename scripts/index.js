@@ -1,5 +1,5 @@
 import { db } from './firebaseConfig.js';
-import { collection, getDocs, addDoc, query, where, updateDoc, deleteDoc, doc } from 'https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js';
+import { collection, getDocs, getDoc, addDoc, query, where, updateDoc, deleteDoc, doc } from 'https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js';
 
 const phoneNumber = "33611142309";
 
@@ -249,8 +249,28 @@ async function getAvisFromAPI() {
   console.info("✅ Fin de l'alimentation des avis en base de données (Simulation)");
 }
 
+async function loadSettings() {
+  try {
+    const adminRef  = doc(db, 'administration', 'vUe53lHeUzvtElioOgxb');
+    const adminSnap = await getDoc(adminRef);
+    if (!adminSnap.exists()) return;
+    const data = adminSnap.data();
+    if (data.note_globale !== undefined) {
+      const el = document.querySelector('.google-note');
+      if (el) el.textContent = `${data.note_globale} / 5`;
+    }
+    if (data.nombre_avis !== undefined) {
+      const el = document.querySelector('.google-compte');
+      if (el) el.textContent = `${data.nombre_avis} avis`;
+    }
+  } catch (error) {
+    console.error('Erreur lors du chargement des paramètres :', error.message);
+  }
+}
+
 document.addEventListener('DOMContentLoaded', () => {
   console.info("🚀 Lancement du site Spray Tan");
   getListeArticle();
   getListeAvis();
+  loadSettings();
 });

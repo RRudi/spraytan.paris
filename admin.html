@@ -47,20 +47,71 @@
       </header>
 
       <main id="admin-main">
-        <div class="dashboard-header">
-          <div>
-            <h2>📃 Articles</h2>
-            <p id="articles-count" class="articles-count">Chargement…</p>
+
+        <!-- Onglets de navigation -->
+        <nav class="tabs" role="tablist">
+          <button class="tab-btn active" data-tab="articles" role="tab" aria-selected="true"  aria-controls="tab-articles">📃 Articles</button>
+          <button class="tab-btn"        data-tab="avis"     role="tab" aria-selected="false" aria-controls="tab-avis">⭐ Avis</button>
+        </nav>
+
+        <!-- ── Onglet Articles ── -->
+        <div id="tab-articles" class="tab-content">
+          <div class="dashboard-header">
+            <div>
+              <h2>📃 Articles</h2>
+              <p id="articles-count" class="articles-count">Chargement…</p>
+            </div>
+            <button id="add-article-btn" class="btn btn-primary">+ Nouvel article</button>
           </div>
-          <button id="add-article-btn" class="btn btn-primary">+ Nouvel article</button>
+
+          <div id="loading-articles" class="loading-state">
+            <div class="spinner-lg"></div>
+            <p>Chargement des articles…</p>
+          </div>
+
+          <div id="articles-container"></div>
         </div>
 
-        <div id="loading-articles" class="loading-state">
-          <div class="spinner-lg"></div>
-          <p>Chargement des articles…</p>
+        <!-- ── Onglet Avis ── -->
+        <div id="tab-avis" class="tab-content" hidden>
+
+          <!-- Paramètres globaux Google -->
+          <div class="settings-card">
+            <h3 class="settings-title">⚙️ Paramètres Google</h3>
+            <form id="settings-form">
+              <div class="form-row">
+                <div class="form-group flex-1">
+                  <label for="settings-note">Note globale (ex : 4,9)</label>
+                  <input type="text" id="settings-note" placeholder="4,9" maxlength="10" />
+                </div>
+                <div class="form-group flex-1">
+                  <label for="settings-compte">Nombre total d'avis</label>
+                  <input type="number" id="settings-compte" placeholder="393" min="0" />
+                </div>
+              </div>
+              <div class="modal-footer" style="margin-top:0">
+                <button type="submit" class="btn btn-primary">Enregistrer les paramètres</button>
+              </div>
+            </form>
+          </div>
+
+          <!-- Liste des avis -->
+          <div class="dashboard-header" style="margin-top:24px">
+            <div>
+              <h2>⭐ Avis</h2>
+              <p id="avis-count" class="articles-count">Chargement…</p>
+            </div>
+            <button id="add-avis-btn" class="btn btn-primary">+ Nouvel avis</button>
+          </div>
+
+          <div id="loading-avis" class="loading-state">
+            <div class="spinner-lg"></div>
+            <p>Chargement des avis…</p>
+          </div>
+
+          <div id="avis-container"></div>
         </div>
 
-        <div id="articles-container"></div>
       </main>
     </div>
 
@@ -124,6 +175,52 @@
             <button id="confirm-cancel" class="btn btn-secondary">Annuler</button>
             <button id="confirm-delete" class="btn btn-danger">Supprimer</button>
           </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── Modal ajout / modification avis ──────────────── -->
+    <div id="avis-modal" class="modal-overlay" hidden>
+      <div class="modal">
+        <div class="modal-header">
+          <h2 id="avis-modal-title">Ajouter un avis</h2>
+          <button id="avis-modal-close" class="btn-icon" title="Fermer" aria-label="Fermer">✕</button>
+        </div>
+        <div class="modal-body">
+          <form id="avis-form" novalidate>
+            <input type="hidden" id="form-avis-id" />
+
+            <div class="form-group">
+              <label for="form-avis-auteur">Auteur <span class="required">*</span></label>
+              <input type="text" id="form-avis-auteur" placeholder="Nom de l'auteur" required />
+            </div>
+
+            <div class="form-row">
+              <div class="form-group flex-1">
+                <label for="form-avis-rating">Note (1 – 5)</label>
+                <input type="number" id="form-avis-rating" min="1" max="5" value="5" />
+              </div>
+              <div class="form-group flex-1">
+                <label for="form-avis-temps">Temps relatif</label>
+                <input type="text" id="form-avis-temps" placeholder="il y a 2 semaines" />
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="form-avis-texte">Texte <span class="required">*</span></label>
+              <textarea id="form-avis-texte" rows="5" placeholder="Texte de l'avis…" required></textarea>
+            </div>
+
+            <div class="form-group">
+              <label for="form-avis-photo">URL de la photo de profil</label>
+              <input type="url" id="form-avis-photo" placeholder="https://…" />
+            </div>
+
+            <div class="modal-footer">
+              <button type="button" id="avis-form-cancel" class="btn btn-secondary">Annuler</button>
+              <button type="submit" id="avis-form-submit" class="btn btn-primary">Enregistrer</button>
+            </div>
+          </form>
         </div>
       </div>
     </div>
