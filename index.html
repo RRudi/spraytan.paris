@@ -44,6 +44,31 @@
     </title>
   </head>
   <body>
+    <!-- ── Loader pleine page ─────────────────────────────────────── -->
+    <div id="page-loader" class="page-loader">
+      <div class="page-loader-inner">
+        <div class="page-loader-spinner"></div>
+        <p>Chargement en cours…</p>
+      </div>
+    </div>
+
+    <!-- ── Modal "Voir plus" article ─────────────────────────────── -->
+    <div id="article-detail-modal" class="article-modal-overlay" hidden>
+      <div class="article-modal">
+        <div class="article-modal-header">
+          <div>
+            <h2 id="article-modal-title"></h2>
+            <p id="article-modal-subtitle"></p>
+          </div>
+          <button id="article-modal-close" class="article-modal-close" title="Fermer" aria-label="Fermer">✕</button>
+        </div>
+        <div class="article-modal-body">
+          <img id="article-modal-image" src="" alt="" class="article-modal-image" hidden />
+          <div id="article-modal-content" class="article-modal-content"></div>
+        </div>
+      </div>
+    </div>
+
     <a id="haut"></a>
     <!--------------------------- Header --------------------->
 

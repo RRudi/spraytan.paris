@@ -3,6 +3,43 @@ import { collection, getDocs, getDoc, addDoc, query, where, updateDoc, deleteDoc
 
 const phoneNumber = "33611142309";
 
+// ─── Loader pleine page ──────────────────────────────────────────────────────
+let articlesLoaded = false;
+let avisLoaded = false;
+
+function checkAllLoaded() {
+  if (articlesLoaded && avisLoaded) {
+    const loader = document.getElementById('page-loader');
+    if (loader) {
+      loader.classList.add('page-loader--hidden');
+      setTimeout(() => { loader.hidden = true; }, 400);
+    }
+  }
+}
+
+// ─── Modal "Voir plus" ───────────────────────────────────────────────────────
+function openArticleModal(article) {
+  document.getElementById('article-modal-title').textContent   = article.titre || '';
+  document.getElementById('article-modal-subtitle').textContent = article.sous_titre || '';
+  const img = document.getElementById('article-modal-image');
+  if (article.image) {
+    img.src    = article.image;
+    img.alt    = article.sous_titre || article.titre || '';
+    img.hidden = false;
+  } else {
+    img.hidden = true;
+  }
+  document.getElementById('article-modal-content').innerHTML = article.contenu || '';
+  const modal = document.getElementById('article-detail-modal');
+  modal.hidden = false;
+  document.body.style.overflow = 'hidden';
+}
+
+function closeArticleModal() {
+  document.getElementById('article-detail-modal').hidden = true;
+  document.body.style.overflow = '';
+}
+
 async function getListeArticle() {
 
   console.info("🗃️ Début de la récupération des articles en base de données");
@@ -27,8 +64,8 @@ async function getListeArticle() {
     // Récupération de la classe <div class="insta-container">
     const container = document.querySelector('.insta-container');
     // Insertion du code HTML des articles dans le container
-    container.innerHTML = listeArticle.map(article => `
-      <article id="${article.id}">
+    container.innerHTML = listeArticle.map((article, index) => `
+      <article id="${article.id}" data-article-index="${index}">
         <header class="insta-container-header">
           <div class="insta-container-header-titre font-secondaire">
             <h2>${article.titre}</h2>
@@ -41,9 +78,10 @@ async function getListeArticle() {
           <img src="${article.image}" alt="${article.sous_titre}" />
         </div>` : ''}
         <div class="insta-container-texte">
-          <div class="article-content">
+          <div class="article-content article-content--truncated">
             ${article.contenu}
           </div>
+          <button class="btn-voir-plus" data-index="${index}" aria-label="Voir plus">Voir plus</button>
           <div class="telephone">
             <a
               href="https://wa.me/${phoneNumber}?text=Bonjour,%20j'ai%20vu%20un%20article%20sur%20votre%20site%20et%20je%20souhaite%20en%20savoir%20plus."
@@ -58,6 +96,14 @@ async function getListeArticle() {
         </div>
       </article>
     `).join('');
+
+    // Boutons "Voir plus"
+    container.querySelectorAll('.btn-voir-plus').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const idx = parseInt(btn.dataset.index, 10);
+        openArticleModal(listeArticle[idx]);
+      });
+    });
     
     if (window.location.href.includes("//spraytan.paris/")) {
       console.info("✅ Le compteur d'appel est mis à jour");
@@ -71,6 +117,9 @@ async function getListeArticle() {
     console.error('Erreur lors du chargement des articles :', error.message);
     const container = document.querySelector('.insta-container');
     container.innerHTML = `<p>Impossible de charger les articles pour le moment. Veuillez réessayer plus tard.</p>`;
+  } finally {
+    articlesLoaded = true;
+    checkAllLoaded();
   }
 
   console.info("✅ Fin de la récupération des articles en base de données");
@@ -144,6 +193,9 @@ async function getListeAvis() {
 
   } catch (error) {
     console.error('🚨 Erreur lors du chargement des avis :', error.message);
+  } finally {
+    avisLoaded = true;
+    checkAllLoaded();
   }
 
   console.info("✅ Fin de la récupération des avis en base de données");
@@ -270,6 +322,16 @@ async function loadSettings() {
 
 document.addEventListener('DOMContentLoaded', () => {
   console.info("🚀 Lancement du site Spray Tan");
+
+  // ── Fermeture de la modal article ───────────────────────────────────────
+  document.getElementById('article-modal-close').addEventListener('click', closeArticleModal);
+  document.getElementById('article-detail-modal').addEventListener('click', e => {
+    if (e.target === e.currentTarget) closeArticleModal();
+  });
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') closeArticleModal();
+  });
+
   getListeArticle();
   getListeAvis();
   loadSettings();

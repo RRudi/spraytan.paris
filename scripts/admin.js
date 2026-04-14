@@ -1,4 +1,4 @@
-import { db, auth } from './firebaseConfig.js';
+import { db, auth, storage } from './firebaseConfig.js';
 import {
   signInWithEmailAndPassword,
   signOut,
@@ -7,6 +7,9 @@ import {
 import {
   collection, getDocs, getDoc, addDoc, updateDoc, deleteDoc, doc
 } from 'https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js';
+import {
+  ref as storageRef, uploadBytes, getDownloadURL
+} from 'https://www.gstatic.com/firebasejs/9.6.1/firebase-storage.js';
 
 // ─── État global ──────────────────────────────────────────────────────────────
 let articles = [];
@@ -147,7 +150,9 @@ function openModal(article = null) {
   const orderField    = document.getElementById('form-order');
   const imageField    = document.getElementById('form-image');
   const preview       = document.getElementById('form-image-preview');
+  const fileInput     = document.getElementById('form-image-file');
   const modalTitle    = document.getElementById('modal-title');
+  const editor        = document.getElementById('form-content');
 
   if (article) {
     modalTitle.textContent    = "Modifier l'article";
@@ -156,15 +161,14 @@ function openModal(article = null) {
     subtitleField.value       = article.sous_titre || '';
     orderField.value          = article.ordre_affichage || '';
     imageField.value          = article.image || '';
-    if (article.image && /^https?:\/\//i.test(article.image)) {
+    if (article.image) {
       preview.src    = article.image;
       preview.hidden = false;
     } else {
       preview.src    = '';
       preview.hidden = true;
     }
-    const editor = tinymce.get('form-content');
-    if (editor) editor.setContent(article.contenu || '');
+    editor.innerHTML = article.contenu || '';
   } else {
     modalTitle.textContent = 'Ajouter un article';
     idField.value          = '';
@@ -173,9 +177,13 @@ function openModal(article = null) {
     orderField.value       = articles.length + 1;
     imageField.value       = '';
     preview.hidden         = true;
-    const editor = tinymce.get('form-content');
-    if (editor) editor.setContent('');
+    preview.src            = '';
+    editor.innerHTML       = '';
   }
+
+  if (fileInput) fileInput.value = '';
+  const statusEl = document.getElementById('form-image-upload-status');
+  if (statusEl) statusEl.hidden = true;
 
   updateTitleCount();
   document.getElementById('article-modal').hidden = false;
@@ -195,16 +203,16 @@ async function handleArticleSubmit(event) {
   const titre     = document.getElementById('form-title').value.trim();
   const sous_titre = document.getElementById('form-subtitle').value.trim();
   const ordre     = parseInt(document.getElementById('form-order').value) || (articles.length + 1);
-  const image     = document.getElementById('form-image').value.trim();
-
-  const editor  = tinymce.get('form-content');
-  const contenu = editor ? editor.getContent() : document.getElementById('form-content').value.trim();
+  const imageField = document.getElementById('form-image');
+  const fileInput  = document.getElementById('form-image-file');
+  const editor     = document.getElementById('form-content');
+  const contenu    = editor ? editor.innerHTML.trim() : '';
 
   if (!titre) {
     showToast('Le titre est obligatoire.', 'error');
     return;
   }
-  if (!contenu || contenu === '<p></p>' || contenu === '<p><br></p>') {
+  if (!contenu || contenu === '<br>') {
     showToast('Le contenu est obligatoire.', 'error');
     return;
   }
@@ -214,6 +222,20 @@ async function handleArticleSubmit(event) {
   submitBtn.textContent = 'Enregistrement…';
 
   try {
+    let image = imageField.value.trim();
+
+    // Upload du fichier image si un fichier est sélectionné
+    if (fileInput && fileInput.files && fileInput.files[0]) {
+      const file = fileInput.files[0];
+      const statusEl = document.getElementById('form-image-upload-status');
+      if (statusEl) { statusEl.textContent = 'Téléchargement de l\'image…'; statusEl.hidden = false; }
+      const filename = `${Date.now()}-${file.name.replace(/[^a-zA-Z0-9._-]/g, '_')}`;
+      const sRef = storageRef(storage, `articles/${filename}`);
+      await uploadBytes(sRef, file);
+      image = await getDownloadURL(sRef);
+      if (statusEl) statusEl.hidden = true;
+    }
+
     if (id) {
       await updateDoc(doc(db, 'articles', id), {
         titre, sous_titre, ordre_affichage: ordre, image, contenu
@@ -550,10 +572,11 @@ document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('article-form').addEventListener('submit', handleArticleSubmit);
   document.getElementById('form-title').addEventListener('input', updateTitleCount);
 
-  document.getElementById('form-image').addEventListener('input', e => {
-    const url = e.target.value.trim();
+  document.getElementById('form-image-file').addEventListener('change', e => {
+    const file = e.target.files[0];
     const preview = document.getElementById('form-image-preview');
-    if (url && /^https?:\/\//i.test(url)) {
+    if (file) {
+      const url = URL.createObjectURL(file);
       preview.src    = url;
       preview.hidden = false;
     } else {
@@ -666,17 +689,19 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  // ── TinyMCE ───────────────────────────────────────────────────────────────
-  tinymce.init({
-    selector: '#form-content',
-    plugins: 'lists link code',
-    toolbar: 'undo redo | styleselect | bold italic underline | alignleft aligncenter | bullist numlist | link | code',
-    menubar: false,
-    height: 300,
-    setup: editor => {
-      editor.on('change input', () => {
-        document.getElementById('form-content').value = editor.getContent();
-      });
-    }
+  // ── Éditeur de texte riche ────────────────────────────────────────────────
+  document.querySelectorAll('#editor-toolbar .toolbar-btn').forEach(btn => {
+    btn.addEventListener('mousedown', e => {
+      e.preventDefault(); // prevent losing focus on editor
+      const cmd = btn.dataset.cmd;
+      document.execCommand(cmd, false, null);
+    });
   });
+
+  const colorInput = document.getElementById('toolbar-color');
+  if (colorInput) {
+    colorInput.addEventListener('input', e => {
+      document.execCommand('foreColor', false, e.target.value);
+    });
+  }
 });

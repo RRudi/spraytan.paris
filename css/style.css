@@ -62,8 +62,156 @@
     }
   }
 
-  .loader {
-    display: flex;
+/* ─── Loader pleine page ────────────────────────────────────────────────── */
+.page-loader {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 0.4s ease;
+}
+
+.page-loader--hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.page-loader-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
+
+.page-loader-spinner {
+  width: 52px;
+  height: 52px;
+  border: 5px solid #e8d9c5;
+  border-top-color: #c8a764;
+  border-radius: 50%;
+  animation: spin 0.9s linear infinite;
+}
+
+.page-loader-inner p {
+  font-size: 1rem;
+  color: #888;
+  font-family: 'Roboto', sans-serif;
+}
+
+/* ─── Modal "Voir plus" article ─────────────────────────────────────────── */
+.article-modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+}
+
+.article-modal {
+  background: #fff;
+  border-radius: 10px;
+  width: 100%;
+  max-width: 680px;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+}
+
+.article-modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 20px 24px 16px;
+  border-bottom: 1px solid #eee;
+  position: sticky;
+  top: 0;
+  background: #fff;
+  z-index: 1;
+}
+
+.article-modal-header h2 {
+  margin: 0 0 4px;
+  font-size: 18px;
+  font-family: 'Roboto', sans-serif;
+  color: #2d3748;
+}
+
+.article-modal-header p {
+  margin: 0;
+  font-size: 14px;
+  color: var(--couleur-principale);
+}
+
+.article-modal-close {
+  background: none;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+  color: #888;
+  padding: 4px;
+  line-height: 1;
+  flex-shrink: 0;
+}
+.article-modal-close:hover { color: #333; }
+
+.article-modal-body {
+  padding: 20px 24px;
+}
+
+.article-modal-image {
+  width: 100%;
+  border-radius: 6px;
+  margin-bottom: 16px;
+  object-fit: cover;
+  max-height: 320px;
+}
+
+.article-modal-content {
+  font-size: 1rem;
+  line-height: 1.7;
+  font-family: var(--police-description);
+  color: #2d3748;
+}
+
+/* ─── Bouton "Voir plus" ────────────────────────────────────────────────── */
+.btn-voir-plus {
+  display: inline-block;
+  margin: 8px 0 10px;
+  padding: 6px 18px;
+  background: var(--couleur-principale);
+  color: #fff;
+  border: none;
+  border-radius: 20px;
+  font-size: 0.9rem;
+  cursor: pointer;
+  font-family: 'Roboto', sans-serif;
+  transition: background 0.2s;
+}
+.btn-voir-plus:hover { background: #a88040; }
+
+/* ─── Troncature du contenu article ─────────────────────────────────────── */
+.article-content--truncated {
+  max-height: 160px;
+  overflow: hidden;
+  position: relative;
+}
+
+.article-content--truncated::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 48px;
+  background: linear-gradient(to bottom, transparent, #fff);
+  pointer-events: none;
+}
     flex-direction: column;
     align-items: center;
     justify-content: center;
