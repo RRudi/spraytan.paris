@@ -18,18 +18,6 @@ async function getListeArticle() {
     // Tri des articles par ordre du champ 'ordre_affichage'
     listeArticle.sort((a, b) => a.ordre_affichage - b.ordre_affichage);
 
-    // Récupération de la date de création la plus récente
-    const latestDate = listeArticle.reduce((latest, article) => {
-      const articleDate = new Date(article.date_creation);
-      return articleDate > latest ? articleDate : latest;
-    }, new Date(0));
-
-    // Affichage de la date et de l'heure dans l'élément <p id="last-updated">
-    const lastUpdatedElement = document.getElementById('last-updated');
-    if (lastUpdatedElement) {
-      lastUpdatedElement.textContent = `Dernière mise à jour : ${latestDate.toLocaleDateString('fr-FR')} à ${latestDate.toLocaleTimeString('fr-FR')}`;
-    }
-
     console.info("📄 Liste des articles : ", listeArticle);
 
     if (!Array.isArray(listeArticle) || listeArticle.length === 0) {
