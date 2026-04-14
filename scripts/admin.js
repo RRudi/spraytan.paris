@@ -13,6 +13,7 @@ let articles = [];
 let avis = [];
 let pendingAction = null;
 let draggedId = null;
+let dragFromHandle = false;
 
 // ─── Toast notifications ──────────────────────────────────────────────────────
 function showToast(message, type = 'success') {
@@ -589,8 +590,12 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   // ── Drag & drop articles ───────────────────────────────────────────────────
+  articlesContainer.addEventListener('mousedown', e => {
+    dragFromHandle = !!e.target.closest('.drag-handle');
+  });
+
   articlesContainer.addEventListener('dragstart', e => {
-    if (!e.target.closest('.drag-handle')) { e.preventDefault(); return; }
+    if (!dragFromHandle) { e.preventDefault(); return; }
     const row = e.target.closest('.article-row');
     if (!row) return;
     draggedId = row.dataset.id;
@@ -634,6 +639,7 @@ document.addEventListener('DOMContentLoaded', () => {
   articlesContainer.addEventListener('dragend', () => {
     articlesContainer.querySelectorAll('.article-row').forEach(r => r.classList.remove('drag-over', 'dragging'));
     draggedId = null;
+    dragFromHandle = false;
   });
 
   // ── Avis ──────────────────────────────────────────────────────────────────
