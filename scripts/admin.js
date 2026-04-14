@@ -1,4 +1,4 @@
-import { db, auth, storage } from './firebaseConfig.js';
+import { db, auth } from './firebaseConfig.js';
 import {
   signInWithEmailAndPassword,
   signOut,
@@ -7,9 +7,6 @@ import {
 import {
   collection, getDocs, getDoc, addDoc, updateDoc, deleteDoc, doc
 } from 'https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js';
-import {
-  ref as storageRef, uploadBytes, getDownloadURL
-} from 'https://www.gstatic.com/firebasejs/9.6.1/firebase-storage.js';
 
 // ─── État global ──────────────────────────────────────────────────────────────
 let articles = [];
@@ -235,10 +232,20 @@ async function handleArticleSubmit(event) {
       }
       const statusEl = document.getElementById('form-image-upload-status');
       if (statusEl) { statusEl.textContent = 'Téléchargement de l\'image…'; statusEl.hidden = false; }
-      const filename = `${Date.now()}-${file.name.replace(/[^a-zA-Z0-9._-]/g, '_')}`;
-      const sRef = storageRef(storage, `articles/${filename}`);
-      await uploadBytes(sRef, file);
-      image = await getDownloadURL(sRef);
+      const idToken = await auth.currentUser.getIdToken();
+      const formData = new FormData();
+      formData.append('file', file);
+      const res = await fetch('/.netlify/functions/upload-image', {
+        method: 'POST',
+        headers: { Authorization: `Bearer ${idToken}` },
+        body: formData
+      });
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({}));
+        throw new Error(err.error || 'Erreur lors du téléchargement');
+      }
+      const { url } = await res.json();
+      image = url;
       if (statusEl) statusEl.hidden = true;
     }
 

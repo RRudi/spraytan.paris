@@ -2,6 +2,9 @@
   command = "node scripts/build.js"
   publish = "dist"
 
+[functions]
+  directory = "netlify/functions"
+
 [[headers]]
   for = "/*"
   [headers.values]
