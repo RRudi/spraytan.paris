@@ -227,6 +227,12 @@ async function handleArticleSubmit(event) {
     // Upload du fichier image si un fichier est sélectionné
     if (fileInput && fileInput.files && fileInput.files[0]) {
       const file = fileInput.files[0];
+      if (!file.type.startsWith('image/')) {
+        showToast('Le fichier sélectionné n\'est pas une image.', 'error');
+        submitBtn.disabled    = false;
+        submitBtn.textContent = 'Enregistrer';
+        return;
+      }
       const statusEl = document.getElementById('form-image-upload-status');
       if (statusEl) { statusEl.textContent = 'Téléchargement de l\'image…'; statusEl.hidden = false; }
       const filename = `${Date.now()}-${file.name.replace(/[^a-zA-Z0-9._-]/g, '_')}`;
@@ -575,7 +581,7 @@ document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('form-image-file').addEventListener('change', e => {
     const file = e.target.files[0];
     const preview = document.getElementById('form-image-preview');
-    if (file) {
+    if (file && file.type.startsWith('image/')) {
       const url = URL.createObjectURL(file);
       preview.src    = url;
       preview.hidden = false;

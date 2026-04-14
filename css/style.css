@@ -212,6 +212,9 @@
   background: linear-gradient(to bottom, transparent, #fff);
   pointer-events: none;
 }
+
+  .loader {
+    display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
