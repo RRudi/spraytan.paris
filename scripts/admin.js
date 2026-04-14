@@ -150,8 +150,13 @@ function openModal(article = null) {
     subtitleField.value       = article.sous_titre || '';
     orderField.value          = article.ordre_affichage || '';
     imageField.value          = article.image || '';
-    preview.src               = article.image || '';
-    preview.hidden            = !article.image;
+    if (article.image && /^https?:\/\//i.test(article.image)) {
+      preview.src    = article.image;
+      preview.hidden = false;
+    } else {
+      preview.src    = '';
+      preview.hidden = true;
+    }
     const editor = tinymce.get('form-content');
     if (editor) editor.setContent(article.contenu || '');
   } else {
@@ -327,8 +332,13 @@ document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('form-image').addEventListener('input', e => {
     const url = e.target.value.trim();
     const preview = document.getElementById('form-image-preview');
-    preview.src    = url;
-    preview.hidden = !url;
+    if (url && /^https?:\/\//i.test(url)) {
+      preview.src    = url;
+      preview.hidden = false;
+    } else {
+      preview.src    = '';
+      preview.hidden = true;
+    }
   });
 
   // Modal confirmation suppression
