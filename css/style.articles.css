@@ -13,17 +13,18 @@
     flex-direction: row;
     flex-wrap: wrap;
     justify-content: center;
-    align-items: flex-start;
+    align-items: stretch;
   }
   
   .insta-container article {
     background-color: #fff;
     width: 400px;
-    /* height: 700px; */
     margin: 20px;
     box-shadow: 0px 0px 6px 0px rgba(90, 90, 90, 0.5);
     border: 0.1em solid var(--couleur-principale);
     border-radius: 5px;
+    display: flex;
+    flex-direction: column;
   }
   
   /*  _________________ Bloc Header _________________ */
@@ -72,8 +73,16 @@
   
   /*  _________________ Bloc Contenu _________________ */
   
+  .insta-container-image {
+    height: 220px;
+    overflow: hidden;
+  }
+
   .insta-container-image img {
     width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
   }
   
   .insta-container-texte {
@@ -82,6 +91,9 @@
     font-family: var(--police-description);
     text-align: justify;
     line-height: 1.5;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
   }
   
   .insta-container-texte p:first-child {
@@ -91,7 +103,8 @@
   .insta-container-texte .telephone {
     font-size: 1rem;
     font-weight: 700;
-    margin-top: 10px;
+    margin-top: auto;
+    padding-top: 10px;
     display: flex;
     justify-content: space-evenly;
     align-items: center;

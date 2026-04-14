@@ -1,4 +1,5 @@
 import { getStore } from '@netlify/blobs';
+import { randomUUID } from 'node:crypto';
 
 // ALLOWED_IMAGE_MAGIC_BYTES contains the leading bytes for supported image formats.
 const ALLOWED_IMAGE_MAGIC_BYTES = [
@@ -67,7 +68,7 @@ export default async (req) => {
     }
 
     const store = getStore('articles-images');
-    const randomId = crypto.randomUUID().slice(0, 8);
+    const randomId = randomUUID().slice(0, 8);
     const filename = `${Date.now()}-${randomId}-${file.name.replace(/[^a-zA-Z0-9._-]/g, '_')}`;
     await store.set(filename, buffer, { metadata: { contentType: file.type } });
 
