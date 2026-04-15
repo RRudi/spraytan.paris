@@ -97,7 +97,18 @@ async function getListeArticle() {
       </article>
     `).join('');
 
-    // Boutons "Voir plus"
+    // Boutons "Voir plus" : afficher seulement si le contenu déborde
+    const checkOverflow = () => {
+      container.querySelectorAll('.article-content--truncated').forEach(content => {
+        if (content.scrollHeight <= content.clientHeight) {
+          content.classList.remove('article-content--truncated');
+          const btn = content.parentElement.querySelector('.btn-voir-plus');
+          if (btn) btn.hidden = true;
+        }
+      });
+    };
+    document.fonts.ready.then(checkOverflow).catch(checkOverflow);
+
     container.querySelectorAll('.btn-voir-plus').forEach(btn => {
       btn.addEventListener('click', () => {
         const idx = parseInt(btn.dataset.index, 10);
@@ -314,6 +325,32 @@ async function loadSettings() {
     if (data.nombre_avis !== undefined) {
       const el = document.querySelector('.google-compte');
       if (el) el.textContent = `${data.nombre_avis} avis`;
+    }
+    // Description dans l'entête
+    if (data.header_description) {
+      const el = document.getElementById('header-description');
+      if (el) el.textContent = data.header_description;
+    }
+    // Liens du footer
+    if (data.footer_planity_url) {
+      const el = document.getElementById('footer-planity');
+      if (el) el.href = data.footer_planity_url;
+    }
+    if (data.footer_facebook_url) {
+      const el = document.getElementById('footer-facebook');
+      if (el) el.href = data.footer_facebook_url;
+    }
+    if (data.footer_instagram_url) {
+      const el = document.getElementById('footer-instagram');
+      if (el) el.href = data.footer_instagram_url;
+    }
+    if (data.footer_phone) {
+      const el = document.getElementById('footer-phone');
+      if (el) el.href = `tel:${data.footer_phone}`;
+    }
+    if (data.footer_whatsapp_url) {
+      const el = document.getElementById('footer-whatsapp');
+      if (el) el.href = data.footer_whatsapp_url;
     }
   } catch (error) {
     console.error('Erreur lors du chargement des paramètres :', error.message);
