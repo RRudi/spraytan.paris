@@ -121,8 +121,25 @@
             <h3 class="settings-title">🖼️ Entête du site</h3>
             <form id="site-settings-form">
               <div class="form-group">
-                <label for="settings-header-description">Description affichée sous le titre (entête)</label>
-                <input type="text" id="settings-header-description" placeholder="Institut de beauté spécialisé dans le spray bronzant…" maxlength="120" />
+                <label>Description affichée sous le titre (entête)</label>
+                <div id="header-desc-toolbar" class="editor-toolbar">
+                  <button type="button" class="toolbar-btn" data-cmd="bold" title="Gras"><b>G</b></button>
+                  <button type="button" class="toolbar-btn" data-cmd="italic" title="Italique"><i>I</i></button>
+                  <button type="button" class="toolbar-btn" data-cmd="underline" title="Souligné"><u>S</u></button>
+                  <button type="button" class="toolbar-btn" data-cmd="strikeThrough" title="Barré"><s>A</s></button>
+                  <span class="toolbar-sep"></span>
+                  <label class="toolbar-color-label" title="Couleur du texte">
+                    <span>A</span>
+                    <input type="color" class="toolbar-color" value="#ffffff" />
+                  </label>
+                  <label class="toolbar-color-label toolbar-highlight-label" title="Surlignage">
+                    <span style="background:#fef08a;padding:0 3px;border-radius:2px">A</span>
+                    <input type="color" class="toolbar-highlight" value="#fef08a" />
+                  </label>
+                  <span class="toolbar-sep"></span>
+                  <button type="button" class="toolbar-btn" data-cmd="removeFormat" title="Effacer la mise en forme">✕</button>
+                </div>
+                <div id="settings-header-description" contenteditable="true" class="rich-editor rich-editor-sm" aria-label="Description entête" role="textbox"></div>
               </div>
 
               <h3 class="settings-title" style="margin-top:24px">🔗 Liens du footer</h3>
@@ -207,7 +224,11 @@
                 <span class="toolbar-sep"></span>
                 <label class="toolbar-color-label" title="Couleur du texte">
                   <span>A</span>
-                  <input type="color" id="toolbar-color" value="#000000" />
+                  <input type="color" id="toolbar-color" class="toolbar-color" value="#000000" />
+                </label>
+                <label class="toolbar-color-label toolbar-highlight-label" title="Surlignage">
+                  <span style="background:#fef08a;padding:0 3px;border-radius:2px">A</span>
+                  <input type="color" class="toolbar-highlight" value="#fef08a" />
                 </label>
                 <span class="toolbar-sep"></span>
                 <button type="button" class="toolbar-btn" data-cmd="removeFormat" title="Effacer la mise en forme">✕</button>
