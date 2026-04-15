@@ -6,6 +6,9 @@ Modifier le code :
 4. Le déploiement devrait se faire automatiquement*
 5. Checker le site https://spraytan.paris/
 
+**FireBase :** https://console.firebase.google.com/u/0/project/spraytan-c3749/overview
+_Se connecter avec maboitemail.romeu_
+
 Nommage Commit : 
 v2.1 : Description modification
 
