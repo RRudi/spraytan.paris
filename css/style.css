@@ -1,10 +1,5 @@
-/* _________________ Communs _________________ */
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-  
-    /* ── Variables : ── */
+/* ── Variables CSS ──────────────────────────────────────────────────── */
+:root {
     --couleur-principale: #c8a764/*#23a6d5*/;
     --police-description:  "inherit", sans-serif;
     /*--police-principal:  "Pacifico", cursive;*/
@@ -21,6 +16,13 @@
     --pastel-border: #f0e0d6;
     --pastel-text: #4a3f35;
     --pastel-text-light: #8a7e74;
+  }
+
+/* _________________ Communs _________________ */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
   }
   
   a {
