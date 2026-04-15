@@ -107,7 +107,7 @@ async function getListeArticle() {
         }
       });
     };
-    document.fonts.ready.then(checkOverflow);
+    document.fonts.ready.then(checkOverflow).catch(checkOverflow);
 
     container.querySelectorAll('.btn-voir-plus').forEach(btn => {
       btn.addEventListener('click', () => {
