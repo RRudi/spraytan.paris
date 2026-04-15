@@ -42,6 +42,7 @@ function showAdminScreen() {
   document.getElementById('admin-screen').hidden = false;
   loadArticles();
   loadSettings();
+  loadSiteSettings();
 }
 
 async function handleLogin(event) {
@@ -367,6 +368,53 @@ async function loadSettings() {
   }
 }
 
+async function loadSiteSettings() {
+  try {
+    const adminSnap = await getDoc(doc(db, 'administration', ADMIN_DOC_ID));
+    if (!adminSnap.exists()) return;
+    const data = adminSnap.data();
+    if (data.header_description !== undefined) document.getElementById('settings-header-description').value = data.header_description;
+    if (data.footer_planity_url  !== undefined) document.getElementById('settings-planity').value   = data.footer_planity_url;
+    if (data.footer_facebook_url !== undefined) document.getElementById('settings-facebook').value  = data.footer_facebook_url;
+    if (data.footer_instagram_url !== undefined) document.getElementById('settings-instagram').value = data.footer_instagram_url;
+    if (data.footer_phone        !== undefined) document.getElementById('settings-phone').value     = data.footer_phone;
+    if (data.footer_whatsapp_url !== undefined) document.getElementById('settings-whatsapp').value  = data.footer_whatsapp_url;
+  } catch (err) {
+    console.error(err);
+  }
+}
+
+async function handleSiteSettingsSubmit(event) {
+  event.preventDefault();
+  const headerDescription  = document.getElementById('settings-header-description').value.trim();
+  const footerPlanity      = document.getElementById('settings-planity').value.trim();
+  const footerFacebook     = document.getElementById('settings-facebook').value.trim();
+  const footerInstagram    = document.getElementById('settings-instagram').value.trim();
+  const footerPhone        = document.getElementById('settings-phone').value.trim();
+  const footerWhatsapp     = document.getElementById('settings-whatsapp').value.trim();
+  const btn                = event.submitter;
+
+  btn.disabled    = true;
+  btn.textContent = 'Enregistrement…';
+  try {
+    await updateDoc(doc(db, 'administration', ADMIN_DOC_ID), {
+      header_description:    headerDescription,
+      footer_planity_url:    footerPlanity,
+      footer_facebook_url:   footerFacebook,
+      footer_instagram_url:  footerInstagram,
+      footer_phone:          footerPhone,
+      footer_whatsapp_url:   footerWhatsapp
+    });
+    showToast('Paramètres mis à jour.');
+  } catch (err) {
+    console.error(err);
+    showToast('Erreur lors de l\'enregistrement.', 'error');
+  } finally {
+    btn.disabled    = false;
+    btn.textContent = 'Enregistrer les paramètres';
+  }
+}
+
 async function handleSettingsSubmit(event) {
   event.preventDefault();
   const note        = document.getElementById('settings-note').value.trim();
@@ -680,6 +728,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // ── Avis ──────────────────────────────────────────────────────────────────
   document.getElementById('settings-form').addEventListener('submit', handleSettingsSubmit);
+
+  // ── Paramètres du site ────────────────────────────────────────────────────
+  document.getElementById('site-settings-form').addEventListener('submit', handleSiteSettingsSubmit);
 
   document.getElementById('add-avis-btn').addEventListener('click', () => openAvisModal());
   document.getElementById('avis-modal-close').addEventListener('click', closeAvisModal);
