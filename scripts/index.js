@@ -352,6 +352,24 @@ async function loadSettings() {
       const el = document.getElementById('footer-whatsapp');
       if (el) el.href = data.footer_whatsapp_url;
     }
+    // Variables CSS personnalisées
+    const cssVarMap = {
+      css_couleur_principale: '--couleur-principale',
+      css_pastel_bg:          '--pastel-bg',
+      css_pastel_card:        '--pastel-card',
+      css_pastel_text:        '--pastel-text',
+      css_pastel_text_light:  '--pastel-text-light',
+      css_pastel_pink:        '--pastel-pink',
+      css_pastel_peach:       '--pastel-peach',
+      css_pastel_cream:       '--pastel-cream',
+      css_pastel_accent:      '--pastel-accent',
+      css_pastel_border:      '--pastel-border',
+    };
+    Object.entries(cssVarMap).forEach(([field, cssVar]) => {
+      if (data[field]) {
+        document.documentElement.style.setProperty(cssVar, data[field]);
+      }
+    });
   } catch (error) {
     console.error('Erreur lors du chargement des paramètres :', error.message);
   }

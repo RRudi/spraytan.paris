@@ -43,6 +43,7 @@ function showAdminScreen() {
   loadArticles();
   loadSettings();
   loadSiteSettings();
+  loadCssSettings();
 }
 
 async function handleLogin(event) {
@@ -438,6 +439,81 @@ async function handleSettingsSubmit(event) {
   }
 }
 
+// ─── Paramètres CSS (couleurs) ────────────────────────────────────────────────
+const CSS_COLOR_DEFAULTS = {
+  css_couleur_principale: '#c8a764',
+  css_pastel_bg:          '#fdf6f0',
+  css_pastel_card:        '#ffffff',
+  css_pastel_text:        '#4a3f35',
+  css_pastel_text_light:  '#8a7e74',
+  css_pastel_pink:        '#f8e8e0',
+  css_pastel_peach:       '#fce4d6',
+  css_pastel_cream:       '#fdf8f3',
+  css_pastel_accent:      '#f5d5c8',
+  css_pastel_border:      '#f0e0d6',
+};
+
+const CSS_COLOR_INPUT_MAP = {
+  css_couleur_principale: 'css-couleur-principale',
+  css_pastel_bg:          'css-pastel-bg',
+  css_pastel_card:        'css-pastel-card',
+  css_pastel_text:        'css-pastel-text',
+  css_pastel_text_light:  'css-pastel-text-light',
+  css_pastel_pink:        'css-pastel-pink',
+  css_pastel_peach:       'css-pastel-peach',
+  css_pastel_cream:       'css-pastel-cream',
+  css_pastel_accent:      'css-pastel-accent',
+  css_pastel_border:      'css-pastel-border',
+};
+
+async function loadCssSettings() {
+  try {
+    const adminSnap = await getDoc(doc(db, 'administration', ADMIN_DOC_ID));
+    const data = adminSnap.exists() ? adminSnap.data() : {};
+    Object.entries(CSS_COLOR_INPUT_MAP).forEach(([field, inputId]) => {
+      const value = data[field] || CSS_COLOR_DEFAULTS[field];
+      const input = document.getElementById(inputId);
+      const valEl = document.getElementById(`${inputId}-val`);
+      if (input) { input.value = value; }
+      if (valEl) { valEl.textContent = value; }
+    });
+  } catch (err) {
+    console.error(err);
+  }
+}
+
+async function handleCssSettingsSubmit(event) {
+  event.preventDefault();
+  const btn = event.submitter;
+  const updates = {};
+  Object.entries(CSS_COLOR_INPUT_MAP).forEach(([field, inputId]) => {
+    const input = document.getElementById(inputId);
+    if (input) updates[field] = input.value;
+  });
+
+  btn.disabled    = true;
+  btn.textContent = 'Enregistrement…';
+  try {
+    await updateDoc(doc(db, 'administration', ADMIN_DOC_ID), updates);
+    showToast('Couleurs mises à jour.');
+  } catch (err) {
+    console.error(err);
+    showToast('Erreur lors de l\'enregistrement des couleurs.', 'error');
+  } finally {
+    btn.disabled    = false;
+    btn.textContent = 'Enregistrer les couleurs';
+  }
+}
+
+function resetCssSettings() {
+  Object.entries(CSS_COLOR_INPUT_MAP).forEach(([field, inputId]) => {
+    const input = document.getElementById(inputId);
+    const valEl = document.getElementById(`${inputId}-val`);
+    if (input) { input.value = CSS_COLOR_DEFAULTS[field]; }
+    if (valEl) { valEl.textContent = CSS_COLOR_DEFAULTS[field]; }
+  });
+}
+
 // ─── Avis ─────────────────────────────────────────────────────────────────────
 async function loadAvis() {
   document.getElementById('loading-avis').hidden = false;
@@ -780,6 +856,18 @@ document.addEventListener('DOMContentLoaded', () => {
   document.querySelectorAll('.toolbar-highlight').forEach(input => {
     input.addEventListener('input', e => {
       document.execCommand('hiliteColor', false, e.target.value);
+    });
+  });
+
+  // ── Paramètres CSS (couleurs) ─────────────────────────────────────────────
+  document.getElementById('css-settings-form').addEventListener('submit', handleCssSettingsSubmit);
+  document.getElementById('css-reset-btn').addEventListener('click', resetCssSettings);
+
+  // Mise à jour de la valeur affichée et aperçu en direct
+  document.querySelectorAll('#css-settings-form input[type="color"]').forEach(input => {
+    input.addEventListener('input', e => {
+      const valEl = document.getElementById(`${e.target.id}-val`);
+      if (valEl) valEl.textContent = e.target.value;
     });
   });
 });

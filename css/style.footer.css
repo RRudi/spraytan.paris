@@ -1,7 +1,7 @@
 /* _______________________________ Footer __________________________*/
 
 .footer-navigation ul {
-    background: linear-gradient(135deg, #fdf6f0 0%, #f8e8e0 100%);
+    background: linear-gradient(135deg, var(--pastel-bg) 0%, var(--pastel-pink) 100%);
     list-style-type: none;
     position: fixed;
     bottom: 0;
