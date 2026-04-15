@@ -312,6 +312,14 @@ async function getAvisFromAPI() {
   console.info("✅ Fin de l'alimentation des avis en base de données (Simulation)");
 }
 
+function adjustInstaMargin() {
+  const header = document.querySelector('.entete');
+  const insta  = document.querySelector('.insta');
+  if (header && insta) {
+    insta.style.marginTop = header.offsetHeight + 'px';
+  }
+}
+
 async function loadSettings() {
   try {
     const adminRef  = doc(db, 'administration', 'vUe53lHeUzvtElioOgxb');
@@ -372,6 +380,8 @@ async function loadSettings() {
     });
   } catch (error) {
     console.error('Erreur lors du chargement des paramètres :', error.message);
+  } finally {
+    adjustInstaMargin();
   }
 }
 
@@ -386,6 +396,8 @@ document.addEventListener('DOMContentLoaded', () => {
   document.addEventListener('keydown', e => {
     if (e.key === 'Escape') closeArticleModal();
   });
+
+  window.addEventListener('resize', adjustInstaMargin);
 
   getListeArticle();
   getListeAvis();
