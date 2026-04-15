@@ -170,6 +170,112 @@
             </form>
           </div>
 
+          <!-- Couleurs du site -->
+          <div class="settings-card" style="margin-top:16px">
+            <h3 class="settings-title">🎨 Couleurs du site</h3>
+            <form id="css-settings-form">
+
+              <div class="color-settings-grid">
+
+                <div class="color-setting-group">
+                  <h4 class="color-group-title">Couleur principale</h4>
+                  <div class="color-setting-item">
+                    <label class="color-setting-label" for="css-couleur-principale">Accent (boutons, liens, titres)</label>
+                    <div class="color-setting-preview">
+                      <input type="color" id="css-couleur-principale" data-var="--couleur-principale" value="#c8a764" />
+                      <span class="color-setting-value" id="css-couleur-principale-val">#c8a764</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="color-setting-group">
+                  <h4 class="color-group-title">Fonds</h4>
+                  <div class="color-setting-item">
+                    <label class="color-setting-label" for="css-pastel-bg">Fond de la page</label>
+                    <div class="color-setting-preview">
+                      <input type="color" id="css-pastel-bg" data-var="--pastel-bg" value="#fdf6f0" />
+                      <span class="color-setting-value" id="css-pastel-bg-val">#fdf6f0</span>
+                    </div>
+                  </div>
+                  <div class="color-setting-item">
+                    <label class="color-setting-label" for="css-pastel-card">Fond des cartes</label>
+                    <div class="color-setting-preview">
+                      <input type="color" id="css-pastel-card" data-var="--pastel-card" value="#ffffff" />
+                      <span class="color-setting-value" id="css-pastel-card-val">#ffffff</span>
+                    </div>
+                  </div>
+                  <div class="color-setting-item">
+                    <label class="color-setting-label" for="css-pastel-cream">Fond copyright</label>
+                    <div class="color-setting-preview">
+                      <input type="color" id="css-pastel-cream" data-var="--pastel-cream" value="#fdf8f3" />
+                      <span class="color-setting-value" id="css-pastel-cream-val">#fdf8f3</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="color-setting-group">
+                  <h4 class="color-group-title">Texte</h4>
+                  <div class="color-setting-item">
+                    <label class="color-setting-label" for="css-pastel-text">Texte principal</label>
+                    <div class="color-setting-preview">
+                      <input type="color" id="css-pastel-text" data-var="--pastel-text" value="#4a3f35" />
+                      <span class="color-setting-value" id="css-pastel-text-val">#4a3f35</span>
+                    </div>
+                  </div>
+                  <div class="color-setting-item">
+                    <label class="color-setting-label" for="css-pastel-text-light">Texte secondaire</label>
+                    <div class="color-setting-preview">
+                      <input type="color" id="css-pastel-text-light" data-var="--pastel-text-light" value="#8a7e74" />
+                      <span class="color-setting-value" id="css-pastel-text-light-val">#8a7e74</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="color-setting-group">
+                  <h4 class="color-group-title">Header &amp; Footer</h4>
+                  <div class="color-setting-item">
+                    <label class="color-setting-label" for="css-pastel-pink">Rose pastel (début dégradé)</label>
+                    <div class="color-setting-preview">
+                      <input type="color" id="css-pastel-pink" data-var="--pastel-pink" value="#f8e8e0" />
+                      <span class="color-setting-value" id="css-pastel-pink-val">#f8e8e0</span>
+                    </div>
+                  </div>
+                  <div class="color-setting-item">
+                    <label class="color-setting-label" for="css-pastel-peach">Pêche pastel (fin dégradé header)</label>
+                    <div class="color-setting-preview">
+                      <input type="color" id="css-pastel-peach" data-var="--pastel-peach" value="#fce4d6" />
+                      <span class="color-setting-value" id="css-pastel-peach-val">#fce4d6</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="color-setting-group">
+                  <h4 class="color-group-title">Bordures &amp; Accents</h4>
+                  <div class="color-setting-item">
+                    <label class="color-setting-label" for="css-pastel-border">Bordures</label>
+                    <div class="color-setting-preview">
+                      <input type="color" id="css-pastel-border" data-var="--pastel-border" value="#f0e0d6" />
+                      <span class="color-setting-value" id="css-pastel-border-val">#f0e0d6</span>
+                    </div>
+                  </div>
+                  <div class="color-setting-item">
+                    <label class="color-setting-label" for="css-pastel-accent">Accent pastel</label>
+                    <div class="color-setting-preview">
+                      <input type="color" id="css-pastel-accent" data-var="--pastel-accent" value="#f5d5c8" />
+                      <span class="color-setting-value" id="css-pastel-accent-val">#f5d5c8</span>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+
+              <div class="modal-footer" style="margin-top:16px">
+                <button type="button" id="css-reset-btn" class="btn btn-secondary">Réinitialiser</button>
+                <button type="submit" class="btn btn-primary">Enregistrer les couleurs</button>
+              </div>
+            </form>
+          </div>
+
         </div>
 
       </main>

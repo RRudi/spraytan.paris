@@ -6,7 +6,7 @@
     /* Décoration */
     color: var(--couleur-principale);
     font-family: var(--police-principal);
-    background: linear-gradient(135deg, #fdf6f0 0%, #f8e8e0 50%, #fce4d6 100%);
+    background: linear-gradient(135deg, var(--pastel-bg) 0%, var(--pastel-pink) 50%, var(--pastel-peach) 100%);
     box-shadow: 0 2px 12px rgba(200, 167, 100, 0.10);
     border-bottom: 1px solid var(--pastel-border);
   
