@@ -373,7 +373,7 @@ async function loadSiteSettings() {
     const adminSnap = await getDoc(doc(db, 'administration', ADMIN_DOC_ID));
     if (!adminSnap.exists()) return;
     const data = adminSnap.data();
-    if (data.header_description !== undefined) document.getElementById('settings-header-description').value = data.header_description;
+    if (data.header_description !== undefined) document.getElementById('settings-header-description').innerHTML = data.header_description;
     if (data.footer_planity_url  !== undefined) document.getElementById('settings-planity').value   = data.footer_planity_url;
     if (data.footer_facebook_url !== undefined) document.getElementById('settings-facebook').value  = data.footer_facebook_url;
     if (data.footer_instagram_url !== undefined) document.getElementById('settings-instagram').value = data.footer_instagram_url;
@@ -386,7 +386,7 @@ async function loadSiteSettings() {
 
 async function handleSiteSettingsSubmit(event) {
   event.preventDefault();
-  const headerDescription  = document.getElementById('settings-header-description').value.trim();
+  const headerDescription  = document.getElementById('settings-header-description').innerHTML.trim();
   const footerPlanity      = document.getElementById('settings-planity').value.trim();
   const footerFacebook     = document.getElementById('settings-facebook').value.trim();
   const footerInstagram    = document.getElementById('settings-instagram').value.trim();
@@ -762,10 +762,24 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  const colorInput = document.getElementById('toolbar-color');
-  if (colorInput) {
-    colorInput.addEventListener('input', e => {
+  // ── Éditeur riche pour description entête ──────────────────────────────────
+  document.querySelectorAll('#header-desc-toolbar .toolbar-btn').forEach(btn => {
+    btn.addEventListener('mousedown', e => {
+      e.preventDefault();
+      const cmd = btn.dataset.cmd;
+      document.execCommand(cmd, false, null);
+    });
+  });
+
+  document.querySelectorAll('.toolbar-color').forEach(input => {
+    input.addEventListener('input', e => {
       document.execCommand('foreColor', false, e.target.value);
     });
-  }
+  });
+
+  document.querySelectorAll('.toolbar-highlight').forEach(input => {
+    input.addEventListener('input', e => {
+      document.execCommand('hiliteColor', false, e.target.value);
+    });
+  });
 });

@@ -3,7 +3,7 @@
 .insta {
     margin: auto;
     margin-top: 95px;
-    background-color: #FFF;
+    background-color: var(--pastel-bg);
   }
   
   .insta-container {
@@ -17,14 +17,15 @@
   }
   
   .insta-container article {
-    background-color: #fff;
+    background-color: var(--pastel-card);
     width: 400px;
     margin: 20px;
-    box-shadow: 0px 0px 6px 0px rgba(90, 90, 90, 0.5);
-    border: 0.1em solid var(--couleur-principale);
-    border-radius: 5px;
+    box-shadow: 0 4px 20px rgba(200, 167, 100, 0.08);
+    border: 1px solid var(--pastel-border);
+    border-radius: 16px;
     display: flex;
     flex-direction: column;
+    overflow: hidden;
   }
   
   /*  _________________ Bloc Header _________________ */
@@ -63,7 +64,7 @@
   .insta-container-header-img {
     width: 50px;
     height: 50px;
-    border: medium solid var(--couleur-principale);
+    border: 2px solid var(--pastel-accent);
     border-radius: 50%;
     background-image: url(../img/autres/tata-fatia-tan.png);
     background-repeat: no-repeat;

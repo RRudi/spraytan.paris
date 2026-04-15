@@ -329,7 +329,7 @@ async function loadSettings() {
     // Description dans l'entête
     if (data.header_description) {
       const el = document.getElementById('header-description');
-      if (el) el.textContent = data.header_description;
+      if (el) el.innerHTML = data.header_description;
     }
     // Liens du footer
     if (data.footer_planity_url) {
